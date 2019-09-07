@@ -1,4 +1,4 @@
-package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario;
+package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
     @Column(name = "EMAIL")
@@ -29,7 +29,7 @@ public class Usuario {
     @NotNull
     private String senha;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "FK_PERMISSAO")
     @NotNull
     private Permissao permissao;
