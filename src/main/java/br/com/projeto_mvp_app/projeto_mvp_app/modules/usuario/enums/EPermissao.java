@@ -1,4 +1,4 @@
-package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario;
+package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums;
 
 import lombok.Getter;
 
