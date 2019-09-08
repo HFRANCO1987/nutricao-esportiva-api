@@ -20,5 +20,4 @@ public class UsuarioController {
     public List<Usuario> getAll() {
         return usuarioRepository.findAll();
     }
-
 }
