@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -22,6 +23,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private static final String APPLICATION_CLIENT = "projeto_mvp_app-client";
     private static final String APPLICATION_SECRET = "projeto_mvp_app-secret";
@@ -40,7 +43,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
             .withClient(APPLICATION_CLIENT)
-            .secret(passwordEncoder.encode(APPLICATION_SECRET))
+            .secret(bCryptPasswordEncoder.encode(APPLICATION_SECRET))
             .authorizedGrantTypes("password")
             .authorities(ADMIN.name(), USER.name())
             .scopes("read", "write", "trust")
