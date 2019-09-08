@@ -12,7 +12,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao.*;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao.ADMIN;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao.USER;
 
 @Configuration
 @EnableAuthorizationServer
@@ -24,7 +25,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bcryptPasswordEncoder;
 
     private static final String APPLICATION_CLIENT = "projeto_mvp_app-client";
     private static final String APPLICATION_SECRET = "projeto_mvp_app-secret";
@@ -43,7 +44,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
             .withClient(APPLICATION_CLIENT)
-            .secret(bCryptPasswordEncoder.encode(APPLICATION_SECRET))
+            .secret(bcryptPasswordEncoder.encode(APPLICATION_SECRET))
             .authorizedGrantTypes("password")
             .authorities(ADMIN.name(), USER.name())
             .scopes("read", "write", "trust")

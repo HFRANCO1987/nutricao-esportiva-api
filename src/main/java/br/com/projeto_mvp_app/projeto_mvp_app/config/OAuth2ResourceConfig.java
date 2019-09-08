@@ -7,7 +7,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao.*;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao.ADMIN;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao.USER;
 
 @Configuration
 @EnableResourceServer
