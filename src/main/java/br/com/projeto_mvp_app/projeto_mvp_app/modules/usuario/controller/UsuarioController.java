@@ -1,5 +1,6 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.controller;
 
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.repository.UsuarioRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
@@ -25,5 +26,10 @@ public class UsuarioController {
     @PostMapping
     public void save(@RequestBody Usuario usuario) {
         usuarioService.save(usuario);
+    }
+
+    @GetMapping("/usuario-autenticado")
+    public UsuarioAutenticado getUsuarioAutenticado() {
+        return usuarioService.getUsuarioAutenticado();
     }
 }
