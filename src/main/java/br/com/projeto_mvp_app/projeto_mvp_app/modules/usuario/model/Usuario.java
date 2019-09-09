@@ -25,6 +25,10 @@ public class Usuario {
     @NotNull
     private String email;
 
+    @Column(name = "NOME", length = 120)
+    @NotNull
+    private String nome;
+
     @Column(name = "SENHA")
     @NotNull
     private String senha;
@@ -41,4 +45,8 @@ public class Usuario {
     @Column(name = "ULTIMO_ACESSO")
     @NotNull
     private LocalDateTime ultimoAcesso;
+
+    public Usuario(Integer id) {
+        this.id = id;
+    }
 }

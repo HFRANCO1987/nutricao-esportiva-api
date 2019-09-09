@@ -19,6 +19,7 @@ import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPerm
 public class UsuarioAutenticado {
 
     private Integer id;
+    private String nome;
     private String email;
     private EPermissao permissao;
     private String descricao;
