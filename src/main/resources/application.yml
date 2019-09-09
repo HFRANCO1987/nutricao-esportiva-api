@@ -1,6 +1,7 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/nutricao_esportiva
+    url: jdbc:postgresql://sqlvhnegrisoli.ddns.net:5432/nutricao_esportiva
+    #url: jdbc:postgresql://localhost:5432/nutricao_esportiva
     username: postgres
     password: 1y5h8j
     initialization-mode: always

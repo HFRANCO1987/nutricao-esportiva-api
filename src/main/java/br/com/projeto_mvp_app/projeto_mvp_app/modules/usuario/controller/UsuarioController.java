@@ -2,7 +2,6 @@ package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.controller;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.repository.UsuarioRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
