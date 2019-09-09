@@ -2,6 +2,7 @@ package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class UsuarioAutenticado {
     private String email;
     private EPermissao permissao;
     private String descricao;
+    @JsonFormat(pattern = "dd/MM/yyyy hh:mm")
     private LocalDateTime ultimoAcesso;
 
     public boolean isAdmin() {

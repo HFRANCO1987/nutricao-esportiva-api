@@ -14,13 +14,11 @@ import java.util.List;
 public class UsuarioController {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
-    @Autowired
     private UsuarioService usuarioService;
 
     @GetMapping
-    public List<Usuario> getAll() {
-        return usuarioRepository.findAll();
+    public List<Usuario> getUsuarios() {
+        return usuarioService.getUsuarios();
     }
 
     @PostMapping
@@ -31,5 +29,10 @@ public class UsuarioController {
     @GetMapping("/usuario-autenticado")
     public UsuarioAutenticado getUsuarioAutenticado() {
         return usuarioService.getUsuarioAutenticado();
+    }
+
+    @PutMapping("/atualizar-ultimo-acesso")
+    public void atualizarUltimoAcesso() {
+        usuarioService.atualizarUltimoAcesso();
     }
 }
