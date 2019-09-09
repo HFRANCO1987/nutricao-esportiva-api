@@ -11,12 +11,24 @@ import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EImcStatus.*;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EColesterolStatus.HDL_BAIXO;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EColesterolStatus.HDL_BOM;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EColesterolStatus.COLESTEROL_TOTAL_ALTO;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EColesterolStatus.COLESTEROL_TOTAL_BOM;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EColesterolStatus.LDL_ALTO;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EColesterolStatus.LDL_BOM;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EImcStatus.ABAIXO;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EImcStatus.IDEAL;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EImcStatus.SOBREPESO;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EImcStatus.OBESIDADE;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EImcStatus.OBESIDADE_GRAVE;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EImcStatus.OBESIDADE_MORBIDA;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class InformacaoNutricionalCalculosResponse {
 
     private Integer id;
@@ -33,8 +45,35 @@ public class InformacaoNutricionalCalculosResponse {
     private LocalDateTime dataUltimoExame;
     private Float ldl;
     private Float imc;
-    private Float percentualDiabetes;
     private String imcStatus;
+    private String colesterolStatus;
+    private String hdlStatus;
+    private String ldlStatus;
+
+    @JsonIgnore
+    private static final Float MAXIMO_ABAIXO = 18.5f;
+    @JsonIgnore
+    private static final Float MAXIMO_IDEAL = 24.9f;
+    @JsonIgnore
+    private static final Float MINIMO_SOBREPESO = 25f;
+    @JsonIgnore
+    private static final Float MAXIMO_SOBREPESO = 29.9f;
+    @JsonIgnore
+    private static final Float MINIMO_OBESIDADE = 30f;
+    @JsonIgnore
+    private static final Float MAXIMO_OBESIDADE = 34.9f;
+    @JsonIgnore
+    private static final Float MINIMO_OBESIDADE_GRAVE = 34.9f;
+    @JsonIgnore
+    private static final Float MAXIMO_OBESIDADE_GRAVE = 39.9f;
+    @JsonIgnore
+    private static final Float MAXIMO_COLESTEROL_TOTAL = 190f;
+    @JsonIgnore
+    private static final Float MINIMO_HDL = 40f;
+    @JsonIgnore
+    private static final Float MINIMO_LDL = 100f;
+    @JsonIgnore
+    private static final Integer DIVISOR_CALCULO_LDL = 5;
 
     @JsonIgnore
     private Float calcularImc() {
@@ -43,27 +82,47 @@ public class InformacaoNutricionalCalculosResponse {
 
     @JsonIgnore
     private String definirStatusImc(Float imc) {
-        return imc < 18.5
+        return imc < MAXIMO_ABAIXO
             ? ABAIXO.getImcStatus()
-            : imc >= 18.5 && imc <= 24.9 ? IDEAL.getImcStatus()
-            : imc >= 25 && imc <= 29.9 ? SOBREPESO.getImcStatus()
-            : imc >= 30 && imc <= 34.9 ? OBESIDADE.getImcStatus()
-            : imc >= 35 && imc <= 39.9 ? OBESIDADE_GRAVE.getImcStatus()
+            : imc >= MAXIMO_ABAIXO && imc <= MAXIMO_IDEAL ? IDEAL.getImcStatus()
+            : imc >= MINIMO_SOBREPESO && imc <= MAXIMO_SOBREPESO ? SOBREPESO.getImcStatus()
+            : imc >= MINIMO_OBESIDADE && imc <= MAXIMO_OBESIDADE ? OBESIDADE.getImcStatus()
+            : imc >= MINIMO_OBESIDADE_GRAVE && imc <= MAXIMO_OBESIDADE_GRAVE ? OBESIDADE_GRAVE.getImcStatus()
             : OBESIDADE_MORBIDA.getImcStatus();
     }
 
     @JsonIgnore
     private Float calcularLdl() {
-        return colesterolTotal - hdl - (triglicerides / 5);
+        return colesterolTotal - hdl - (triglicerides / DIVISOR_CALCULO_LDL);
+    }
+
+    @JsonIgnore
+    private String definirColesterolTotal(Float colesterolTotal) {
+        return colesterolTotal <= MAXIMO_COLESTEROL_TOTAL ? COLESTEROL_TOTAL_BOM.getColesterolStatus()
+            : COLESTEROL_TOTAL_ALTO.getColesterolStatus();
+    }
+
+    @JsonIgnore
+    private String definirHdl(Float hdl) {
+        return hdl < MINIMO_HDL ? HDL_BAIXO.getColesterolStatus()
+            : HDL_BOM.getColesterolStatus();
+    }
+
+    @JsonIgnore
+    private String definirLdl(Float ldl) {
+        return ldl < MINIMO_LDL ? LDL_BOM.getColesterolStatus()
+            : LDL_ALTO.getColesterolStatus();
     }
 
     public static InformacaoNutricionalCalculosResponse of(InformacaoNutricional informacaoNutricional) {
-        var informacoesNutricionaisCalculadas = new InformacaoNutricionalCalculosResponse();
-        BeanUtils.copyProperties(informacaoNutricional, informacoesNutricionaisCalculadas);
-        informacoesNutricionaisCalculadas.setImc(informacoesNutricionaisCalculadas.calcularImc());
-        informacoesNutricionaisCalculadas.setImcStatus(informacoesNutricionaisCalculadas
-            .definirStatusImc(informacoesNutricionaisCalculadas.getImc()));
-        informacoesNutricionaisCalculadas.setLdl(informacoesNutricionaisCalculadas.calcularLdl());
-        return informacoesNutricionaisCalculadas;
+        var info = new InformacaoNutricionalCalculosResponse();
+        BeanUtils.copyProperties(informacaoNutricional, info);
+        info.setImc(info.calcularImc());
+        info.setImcStatus(info.definirStatusImc(info.getImc()));
+        info.setLdl(info.calcularLdl());
+        info.setColesterolStatus(info.definirColesterolTotal(info.getColesterolTotal()));
+        info.setHdlStatus(info.definirHdl(info.getHdl()));
+        info.setLdlStatus(info.definirLdl(info.getLdl()));
+        return info;
     }
 }

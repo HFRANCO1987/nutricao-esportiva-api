@@ -16,11 +16,11 @@ public class DatabaseConfig {
     }
 
     @Bean
-    public DataSource PostgreSqlDataSource() {
+    public DataSource postgreSqlDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
         //dataSource.setUrl("jdbc:postgresql://localhost:5432/nutricao_esportiva");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/nutricao_esportiva");
+        dataSource.setUrl("jdbc:postgresql://sqlvhnegrisoli.ddns.net:5432/nutricao_esportiva");
         dataSource.setUsername("postgres");
         dataSource.setPassword("1y5h8j");
         return dataSource;
