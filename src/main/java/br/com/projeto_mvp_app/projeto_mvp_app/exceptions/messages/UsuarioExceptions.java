@@ -14,6 +14,7 @@ public enum UsuarioExceptions {
     USUARIO_SEM_PERMISSAO_ATUALIZAR_ULTIMO_ACESSO(new ValidacaoException("Você não tem permissão para atualizar o"
         + " último acesso desse usuário.")),
     USUARIO_EMAIL_JA_CADASTRADO(new ValidacaoException("Email já cadastrado para um usuário ativo.")),
+    USUARIO_CPF_JA_CADASTRADO(new ValidacaoException("CPF já cadastrado para um usuário ativo.")),
     PERMISSAO_NAO_ENCONTRADA(new ValidacaoException("Permissão não encontrada.")),
     USUARIO_SEM_VENDEDOR(new ValidacaoException("É preciso ter um vendedor para cadastrar um novo usuário.")),
     USUARIO_COM_VENDEDOR(new ValidacaoException("Esse usuário já possui um vendedor. Um usuário não pode ser vinculado"

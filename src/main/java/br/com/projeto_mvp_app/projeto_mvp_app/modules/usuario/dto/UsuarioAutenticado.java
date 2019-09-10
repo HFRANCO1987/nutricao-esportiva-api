@@ -22,6 +22,7 @@ public class UsuarioAutenticado {
     private Integer id;
     private String nome;
     private String email;
+    private String cpf;
     private EPermissao permissao;
     private String descricao;
     @JsonFormat(pattern = "dd/MM/yyyy hh:mm")

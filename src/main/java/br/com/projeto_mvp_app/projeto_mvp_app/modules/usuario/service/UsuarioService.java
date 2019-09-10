@@ -1,5 +1,6 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service;
 
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.repository.UsuarioRepository;
@@ -13,9 +14,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.exceptions.messages.UsuarioExceptions.USUARIO_NAO_ENCONTRADO;
-import static br.com.projeto_mvp_app.projeto_mvp_app.exceptions.messages.UsuarioExceptions.USUARIO_SEM_SESSAO;
+import static br.com.projeto_mvp_app.projeto_mvp_app.exceptions.messages.UsuarioExceptions.*;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado.of;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario.of;
 
 @Service
 @Slf4j
@@ -26,12 +27,32 @@ public class UsuarioService {
     @Autowired
     private BCryptPasswordEncoder bcryptPasswordEncoder;
 
-    public void save(Usuario usuario) {
-        var senha = bcryptPasswordEncoder.encode(usuario.getSenha());
-        usuario.setSenha(senha);
+    public void save(UsuarioRequest usuarioRequest) {
+        validarDadosUsuario(usuarioRequest);
+        var usuario = of(usuarioRequest);
+        usuario.setSenha(bcryptPasswordEncoder.encode(usuarioRequest.getSenha()));
         usuario.setDataCadastro(LocalDateTime.now());
         usuario.setUltimoAcesso(LocalDateTime.now());
         usuarioRepository.save(usuario);
+    }
+
+    private void validarDadosUsuario(UsuarioRequest usuarioRequest) {
+        validarEmailExistente(usuarioRequest.getEmail());
+        validarCpfExistente(usuarioRequest.getCpf());
+    }
+
+    private void validarEmailExistente(String email) {
+        usuarioRepository.findByEmail(email)
+            .ifPresent(usuarioExistente -> {
+                throw USUARIO_EMAIL_JA_CADASTRADO.getException();
+            });
+    }
+
+    private void validarCpfExistente(String cpf) {
+        usuarioRepository.findByCpf(cpf)
+            .ifPresent(usuarioExistente -> {
+                throw USUARIO_CPF_JA_CADASTRADO.getException();
+            });
     }
 
     public UsuarioAutenticado getUsuarioAutenticado() {

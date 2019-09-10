@@ -1,13 +1,18 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model;
 
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao.USER;
 
 @Entity
 @Table(name = "USUARIO")
@@ -46,7 +51,20 @@ public class Usuario {
     @NotNull
     private LocalDateTime ultimoAcesso;
 
+    @Column(name = "CPF", length = 14)
+    @CPF
+    private String cpf;
+
     public Usuario(Integer id) {
         this.id = id;
+    }
+
+    public static Usuario of(UsuarioRequest usuarioRequest) {
+        var usuario = new Usuario();
+        BeanUtils.copyProperties(usuarioRequest, usuario);
+        usuario.setDataCadastro(LocalDateTime.now());
+        usuario.setUltimoAcesso(LocalDateTime.now());
+        usuario.setPermissao(new Permissao(1, USER, "Usuário"));
+        return usuario;
     }
 }
