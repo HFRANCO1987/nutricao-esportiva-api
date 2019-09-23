@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -55,6 +56,13 @@ public class UsuarioService {
             });
     }
 
+    @Transactional
+    public UsuarioAutenticado getUsuarioAutenticadoAtualizaUltimaData() {
+        var usuarioLogado = getUsuarioAutenticado();
+        usuarioRepository.atualizarUltimoAcesso(LocalDateTime.now(), usuarioLogado.getId());
+        return usuarioLogado;
+    }
+
     public UsuarioAutenticado getUsuarioAutenticado() {
         var email = "";
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -76,13 +84,5 @@ public class UsuarioService {
         }
         return List.of(usuarioRepository.findById(usuarioAutenticado.getId())
             .orElseThrow(USUARIO_NAO_ENCONTRADO::getException));
-    }
-
-    public void atualizarUltimoAcesso() {
-        usuarioRepository.findById(getUsuarioAutenticado().getId())
-            .ifPresent(usuario -> {
-                usuario.setUltimoAcesso(LocalDateTime.now());
-                usuarioRepository.save(usuario);
-            });
     }
 }

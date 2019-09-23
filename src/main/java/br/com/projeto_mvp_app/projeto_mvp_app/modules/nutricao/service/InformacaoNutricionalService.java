@@ -30,7 +30,8 @@ public class InformacaoNutricionalService {
 
     public void save(InformacaoNutricional informacaoNutricional) {
         informacaoNutricional.setDataCadastroInformacao(LocalDateTime.now());
-        informacaoNutricional.setDataUltimoExame(LocalDateTime.now());
+        informacaoNutricional.setDataUltimoExame(informacaoNutricional.getDataUltimoExame());
+        informacaoNutricional.setUsuario(new Usuario(usuarioService.getUsuarioAutenticado().getId()));
         informacaoNutricionalRepository.save(informacaoNutricional);
     }
 }

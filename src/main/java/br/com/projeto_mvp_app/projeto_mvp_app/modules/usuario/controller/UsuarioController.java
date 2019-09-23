@@ -33,12 +33,6 @@ public class UsuarioController {
 
     @GetMapping("/usuario-autenticado")
     public UsuarioAutenticado getUsuarioAutenticado() {
-        return usuarioService.getUsuarioAutenticado();
+        return usuarioService.getUsuarioAutenticadoAtualizaUltimaData();
     }
-
-    @PutMapping("/atualizar-ultimo-acesso")
-    public void atualizarUltimoAcesso() {
-        usuarioService.atualizarUltimoAcesso();
-    }
-
 }
