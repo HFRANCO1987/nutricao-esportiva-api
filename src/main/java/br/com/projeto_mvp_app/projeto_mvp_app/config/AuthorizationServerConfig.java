@@ -29,7 +29,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     private static final String APPLICATION_CLIENT = "projeto_mvp_app-client";
     private static final String APPLICATION_SECRET = "projeto_mvp_app-secret";
-    private static final Integer TOKEN_VALIDITY_SECONDS = 500000;
+    private static final Integer TOKEN_VALIDITY_SECONDS = 0;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {

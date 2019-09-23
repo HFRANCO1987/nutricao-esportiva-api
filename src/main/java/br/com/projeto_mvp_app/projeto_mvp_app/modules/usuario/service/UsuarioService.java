@@ -60,7 +60,7 @@ public class UsuarioService {
     public UsuarioAutenticado getUsuarioAutenticadoAtualizaUltimaData() {
         var usuarioLogado = getUsuarioAutenticado();
         usuarioRepository.atualizarUltimoAcesso(LocalDateTime.now(), usuarioLogado.getId());
-        return usuarioLogado;
+        return of(usuarioRepository.findById(usuarioLogado.getId()).orElseThrow(USUARIO_NAO_ENCONTRADO::getException));
     }
 
     public UsuarioAutenticado getUsuarioAutenticado() {
