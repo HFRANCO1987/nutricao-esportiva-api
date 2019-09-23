@@ -8,6 +8,9 @@ spring:
     initialize: true
     continue-on-error: true
 
+  jackson:
+    time-zone: America/Sao_Paulo
+
   jpa:
     hibernate:
       ddl-auto: none

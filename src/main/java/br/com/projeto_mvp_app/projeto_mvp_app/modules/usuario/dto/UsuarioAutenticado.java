@@ -25,7 +25,7 @@ public class UsuarioAutenticado {
     private String cpf;
     private EPermissao permissao;
     private String descricao;
-    @JsonFormat(pattern = "dd/MM/yyyy hh:mm")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime ultimoAcesso;
 
     public boolean isAdmin() {
