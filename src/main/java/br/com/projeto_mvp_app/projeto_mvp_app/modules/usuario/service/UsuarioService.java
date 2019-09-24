@@ -58,9 +58,16 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioAutenticado getUsuarioAutenticadoAtualizaUltimaData() {
-        var usuarioLogado = getUsuarioAutenticado();
-        usuarioRepository.atualizarUltimoAcesso(LocalDateTime.now(), usuarioLogado.getId());
-        return of(usuarioRepository.findById(usuarioLogado.getId()).orElseThrow(USUARIO_NAO_ENCONTRADO::getException));
+        var usuarioAtualizado = usuarioRepository
+            .findById(getUsuarioAutenticado().getId())
+            .orElseThrow(USUARIO_NAO_ENCONTRADO::getException);
+        return of(atualizarUltimoAcesso(usuarioAtualizado));
+    }
+
+    @Transactional
+    private Usuario atualizarUltimoAcesso(Usuario usuario) {
+        usuario.setUltimoAcesso(LocalDateTime.now());
+        return usuarioRepository.save(usuario);
     }
 
     public UsuarioAutenticado getUsuarioAutenticado() {

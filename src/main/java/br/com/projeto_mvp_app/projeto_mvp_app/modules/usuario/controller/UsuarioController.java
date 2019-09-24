@@ -5,6 +5,8 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenti
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,11 @@ public class UsuarioController {
     @GetMapping
     public List<Usuario> getUsuarios() {
         return usuarioService.getUsuarios();
+    }
+
+    @GetMapping("/check-session")
+    public ResponseEntity checkSession() {
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @PostMapping("/novo")
