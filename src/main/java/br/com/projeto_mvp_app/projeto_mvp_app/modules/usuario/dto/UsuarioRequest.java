@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UsuarioRequest {
 
+    private Integer id;
     private String nome;
     private String email;
     private String cpf;

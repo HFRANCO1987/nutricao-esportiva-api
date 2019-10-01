@@ -1,6 +1,7 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao.USER;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Entity
 @Table(name = "USUARIO")
@@ -54,6 +56,11 @@ public class Usuario {
     @Column(name = "CPF", length = 14)
     @CPF
     private String cpf;
+
+    @JsonIgnore
+    public boolean isNovoCadastro() {
+        return isEmpty(id);
+    }
 
     public Usuario(Integer id) {
         this.id = id;

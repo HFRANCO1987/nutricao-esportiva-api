@@ -13,10 +13,10 @@ public class RestExceptionHandler {
     @ExceptionHandler(ValidacaoException.class)
     public ResponseEntity<?> handleResouseNotFoundException(ValidacaoException rfnException) {
         ValidacaoExceptionDetails resourceNotFoundDetails = new ValidacaoExceptionDetails();
-        resourceNotFoundDetails.setTitle("Recurso não encontrado");
+        resourceNotFoundDetails.setError("Bad Request");
         resourceNotFoundDetails.setTimestamp(new Date().getTime());
-        resourceNotFoundDetails.setStatus(HttpStatus.NOT_FOUND.value());
-        resourceNotFoundDetails.setDetails(rfnException.getMessage());
+        resourceNotFoundDetails.setStatus(HttpStatus.BAD_REQUEST.value());
+        resourceNotFoundDetails.setMessage(rfnException.getMessage());
         return new ResponseEntity<>(resourceNotFoundDetails, HttpStatus.NOT_FOUND);
     }
 }

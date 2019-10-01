@@ -4,6 +4,7 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.dto.InformacaoNut
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.model.InformacaoNutricional;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.service.InformacaoNutricionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class InformacaoNutricionalController {
     }
 
     @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED, reason = "Informações salvas com sucesso!")
     public void save(@RequestBody InformacaoNutricional informacaoNutricional) {
         informacaoNutricionalService.save(informacaoNutricional);
     }

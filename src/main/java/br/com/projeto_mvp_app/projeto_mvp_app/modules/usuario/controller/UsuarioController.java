@@ -29,11 +29,13 @@ public class UsuarioController {
     }
 
     @PostMapping("/novo")
-    public void novoUsuario(@RequestBody UsuarioRequest usuarioRequest) {
+    @ResponseStatus(code = HttpStatus.CREATED, reason = "Usuário inserido com sucesso!")
+     public void novoUsuario(@RequestBody UsuarioRequest usuarioRequest) {
         usuarioService.save(usuarioRequest);
     }
 
     @PutMapping("/alterar-acesso")
+    @ResponseStatus(code = HttpStatus.OK, reason = "Usuário alterado com sucesso!")
     public void alterarDadosUsuario(@RequestBody UsuarioRequest usuarioRequest) {
         usuarioService.save(usuarioRequest);
     }

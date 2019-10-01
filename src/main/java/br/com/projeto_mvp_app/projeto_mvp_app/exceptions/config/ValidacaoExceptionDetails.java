@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class ValidacaoExceptionDetails {
 
-    private String title;
-    private int status;
-    private String details;
     private long timestamp;
+    private int status;
+    private String error;
+    private String message;
 
 }
