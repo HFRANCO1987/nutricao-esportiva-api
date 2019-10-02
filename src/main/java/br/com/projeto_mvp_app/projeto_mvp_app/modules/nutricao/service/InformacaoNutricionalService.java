@@ -21,8 +21,9 @@ public class InformacaoNutricionalService {
     private InformacaoNutricionalRepository informacaoNutricionalRepository;
 
     public List<InformacaoNutricionalCalculosResponse> getAllInfo() {
+        var usuarioLogado = usuarioService.getUsuarioAutenticado();
         return informacaoNutricionalRepository
-            .findByUsuario(new Usuario(usuarioService.getUsuarioAutenticado().getId()))
+            .findByUsuarioOrderByDataCadastroInformacaoDesc(new Usuario(usuarioLogado.getId()))
             .stream()
             .map(InformacaoNutricionalCalculosResponse::of)
             .collect(Collectors.toList());

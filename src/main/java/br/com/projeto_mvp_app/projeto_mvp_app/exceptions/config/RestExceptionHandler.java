@@ -17,6 +17,6 @@ public class RestExceptionHandler {
         resourceNotFoundDetails.setTimestamp(new Date().getTime());
         resourceNotFoundDetails.setStatus(HttpStatus.BAD_REQUEST.value());
         resourceNotFoundDetails.setMessage(rfnException.getMessage());
-        return new ResponseEntity<>(resourceNotFoundDetails, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(resourceNotFoundDetails, HttpStatus.BAD_REQUEST);
     }
 }

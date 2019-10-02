@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
@@ -54,7 +53,6 @@ public class Usuario {
     private LocalDateTime ultimoAcesso;
 
     @Column(name = "CPF", length = 14)
-    @CPF
     private String cpf;
 
     @JsonIgnore

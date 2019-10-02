@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface InformacaoNutricionalRepository extends JpaRepository<InformacaoNutricional, Integer> {
 
-    List<InformacaoNutricional> findByUsuario(Usuario usuario);
+    List<InformacaoNutricional> findByUsuarioOrderByDataCadastroInformacaoDesc(Usuario usuario);
 }

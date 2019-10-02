@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -30,13 +31,13 @@ public class UsuarioController {
 
     @PostMapping("/novo")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "Usuário inserido com sucesso!")
-     public void novoUsuario(@RequestBody UsuarioRequest usuarioRequest) {
+     public void novoUsuario(@RequestBody @Valid UsuarioRequest usuarioRequest) {
         usuarioService.save(usuarioRequest);
     }
 
     @PutMapping("/alterar-acesso")
     @ResponseStatus(code = HttpStatus.OK, reason = "Usuário alterado com sucesso!")
-    public void alterarDadosUsuario(@RequestBody UsuarioRequest usuarioRequest) {
+    public void alterarDadosUsuario(@RequestBody @Valid UsuarioRequest usuarioRequest) {
         usuarioService.save(usuarioRequest);
     }
 
