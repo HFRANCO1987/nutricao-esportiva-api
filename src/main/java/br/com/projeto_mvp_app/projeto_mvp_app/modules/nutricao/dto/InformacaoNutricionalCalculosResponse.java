@@ -1,6 +1,5 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.dto;
 
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EGlicoseStatus;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.model.InformacaoNutricional;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,7 +17,11 @@ import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.ECol
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EColesterolStatus.COLESTEROL_TOTAL_BOM;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EColesterolStatus.LDL_ALTO;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EColesterolStatus.LDL_BOM;
-import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EGlicoseStatus.*;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EGlicoseStatus.GLICOSE_BAIXA;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EGlicoseStatus.GLICOSE_NORMAL;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EGlicoseStatus.GLICOSE_ALTERADA;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EGlicoseStatus.GLICOSE_ALTA;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EGlicoseStatus.GLICOSE_DIABETES;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EImcStatus.ABAIXO;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EImcStatus.IDEAL;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EImcStatus.SOBREPESO;
