@@ -17,6 +17,11 @@ import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.ECol
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EColesterolStatus.COLESTEROL_TOTAL_BOM;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EColesterolStatus.LDL_ALTO;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EColesterolStatus.LDL_BOM;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EGlicoseStatus.GLICOSE_BAIXA;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EGlicoseStatus.GLICOSE_NORMAL;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EGlicoseStatus.GLICOSE_ALTERADA;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EGlicoseStatus.GLICOSE_ALTA;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EGlicoseStatus.GLICOSE_DIABETES;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EImcStatus.ABAIXO;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EImcStatus.IDEAL;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.enums.EImcStatus.SOBREPESO;
@@ -49,6 +54,7 @@ public class InformacaoNutricionalCalculosResponse {
     private String colesterolStatus;
     private String hdlStatus;
     private String ldlStatus;
+    private String glicoseStatus;
 
     @JsonIgnore
     private static final Float MAXIMO_ABAIXO = 18.5f;
@@ -74,6 +80,14 @@ public class InformacaoNutricionalCalculosResponse {
     private static final Float MINIMO_LDL = 100f;
     @JsonIgnore
     private static final Integer DIVISOR_CALCULO_LDL = 5;
+    @JsonIgnore
+    private static final Integer GLICOSE_BAIXA_INDICE = 70;
+    @JsonIgnore
+    private static final Integer GLICOSE_NORMAL_INDICE = 100;
+    @JsonIgnore
+    private static final Integer GLICOSE_ALTA_INDICE = 110;
+    @JsonIgnore
+    private static final Integer GLICOSE_DIABETES_INDICE = 120;
 
     @JsonIgnore
     private Float calcularImc() {
@@ -114,6 +128,15 @@ public class InformacaoNutricionalCalculosResponse {
             : LDL_ALTO.getColesterolStatus();
     }
 
+    @JsonIgnore
+    private String definirGlicoseStatus(Float glicose) {
+        return glicose <= GLICOSE_BAIXA_INDICE ? GLICOSE_BAIXA.getGlicoseStatus()
+            : glicose > GLICOSE_BAIXA_INDICE && glicose <= GLICOSE_NORMAL_INDICE ? GLICOSE_NORMAL.getGlicoseStatus()
+            : glicose > GLICOSE_NORMAL_INDICE && glicose <= GLICOSE_ALTA_INDICE ? GLICOSE_ALTERADA.getGlicoseStatus()
+            : glicose > GLICOSE_ALTA_INDICE && glicose <= GLICOSE_DIABETES_INDICE ? GLICOSE_ALTA.getGlicoseStatus()
+            : GLICOSE_DIABETES.getGlicoseStatus();
+    }
+
     public static InformacaoNutricionalCalculosResponse of(InformacaoNutricional informacaoNutricional) {
         var info = new InformacaoNutricionalCalculosResponse();
         BeanUtils.copyProperties(informacaoNutricional, info);
@@ -123,6 +146,7 @@ public class InformacaoNutricionalCalculosResponse {
         info.setColesterolStatus(info.definirColesterolTotal(info.getColesterolTotal()));
         info.setHdlStatus(info.definirHdl(info.getHdl()));
         info.setLdlStatus(info.definirLdl(info.getLdl()));
+        info.setGlicoseStatus(info.definirGlicoseStatus(info.getGlicose()));
         return info;
     }
 }
