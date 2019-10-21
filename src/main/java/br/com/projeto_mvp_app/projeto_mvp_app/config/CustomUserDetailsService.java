@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.exceptions.messages.UsuarioExceptions.USUARIO_ACESSO_INVALIDO;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.exception.UsuarioException.USUARIO_ACESSO_INVALIDO;
 
 @Service("customUserDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {

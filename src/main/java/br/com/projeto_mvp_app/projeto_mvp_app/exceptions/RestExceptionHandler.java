@@ -1,4 +1,4 @@
-package br.com.projeto_mvp_app.projeto_mvp_app.exceptions.config;
+package br.com.projeto_mvp_app.projeto_mvp_app.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

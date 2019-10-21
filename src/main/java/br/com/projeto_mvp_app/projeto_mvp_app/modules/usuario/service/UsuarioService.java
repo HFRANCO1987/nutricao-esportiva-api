@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.exceptions.messages.UsuarioExceptions.*;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.exception.UsuarioException.*;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado.of;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario.of;
 
