@@ -1,20 +1,22 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.controller;
 
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
+
+    private static final String AUTHORIZATION = "authorization";
 
     @Autowired
     private UsuarioService usuarioService;
@@ -25,8 +27,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/check-session")
-    public ResponseEntity checkSession() {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+    public String checkSession() {
+        return "O usuário " + usuarioService.getUsuarioAutenticado().getNome() + " está logado.";
     }
 
     @PostMapping("/novo")
@@ -39,6 +41,11 @@ public class UsuarioController {
     @ResponseStatus(code = HttpStatus.OK, reason = "Usuário alterado com sucesso!")
     public void alterarDadosUsuario(@RequestBody @Valid UsuarioRequest usuarioRequest) {
         usuarioService.save(usuarioRequest);
+    }
+
+    @GetMapping("/get-token")
+    public String getAuthorizationToken(@RequestHeader Map<String, String> headers) {
+        return headers.get(AUTHORIZATION).replace("Bearer ", "");
     }
 
     @GetMapping("/usuario-autenticado")

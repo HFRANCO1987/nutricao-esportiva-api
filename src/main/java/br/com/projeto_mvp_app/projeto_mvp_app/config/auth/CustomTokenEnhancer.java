@@ -1,4 +1,4 @@
-package br.com.projeto_mvp_app.projeto_mvp_app.config;
+package br.com.projeto_mvp_app.projeto_mvp_app.config.auth;
 
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
