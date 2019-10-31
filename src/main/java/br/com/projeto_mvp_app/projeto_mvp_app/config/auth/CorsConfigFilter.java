@@ -1,4 +1,4 @@
-package br.com.projeto_mvp_app.projeto_mvp_app.config;
+package br.com.projeto_mvp_app.projeto_mvp_app.config.auth;
 
 import org.springframework.stereotype.Component;
 

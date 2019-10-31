@@ -1,6 +1,6 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.exception;
 
-import br.com.projeto_mvp_app.projeto_mvp_app.exceptions.ValidacaoException;
+import br.com.projeto_mvp_app.projeto_mvp_app.config.exception.ValidacaoException;
 import lombok.Getter;
 
 public enum UsuarioException {

@@ -1,22 +1,22 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service;
 
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.repository.UsuarioRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.exception.UsuarioException.*;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado.of;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.exception.UsuarioException.*;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario.of;
 
 @Service
@@ -26,12 +26,12 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
     @Autowired
-    private BCryptPasswordEncoder bcryptPasswordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     public void save(UsuarioRequest usuarioRequest) {
         var usuario = of(usuarioRequest);
         validarDadosUsuario(usuario);
-        usuario.setSenha(bcryptPasswordEncoder.encode(usuarioRequest.getSenha()));
+        usuario.setSenha(passwordEncoder.encode(usuarioRequest.getSenha()));
         usuario.setDataCadastro(LocalDateTime.now());
         usuario.setUltimoAcesso(LocalDateTime.now());
         usuarioRepository.save(usuario);

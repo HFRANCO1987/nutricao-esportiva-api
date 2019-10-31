@@ -1,4 +1,4 @@
-package br.com.projeto_mvp_app.projeto_mvp_app.config;
+package br.com.projeto_mvp_app.projeto_mvp_app.config.auth;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;

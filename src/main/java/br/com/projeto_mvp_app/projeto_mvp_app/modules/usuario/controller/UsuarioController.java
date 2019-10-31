@@ -1,12 +1,11 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.controller;
 
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,8 +27,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/check-session")
-    public ResponseEntity checkSession() {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+    public String checkSession() {
+        return "O usuário " + usuarioService.getUsuarioAutenticado().getNome() + " está logado.";
     }
 
     @PostMapping("/novo")

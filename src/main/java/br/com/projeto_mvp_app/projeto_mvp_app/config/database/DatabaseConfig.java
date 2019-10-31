@@ -1,4 +1,4 @@
-package br.com.projeto_mvp_app.projeto_mvp_app.config;
+package br.com.projeto_mvp_app.projeto_mvp_app.config.database;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
