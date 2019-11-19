@@ -1,6 +1,7 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioFiltros;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.repository.UsuarioRepository;
@@ -88,13 +89,8 @@ public class UsuarioService {
         return of(usuarioRepository.findByEmail(email).orElseThrow(USUARIO_NAO_ENCONTRADO::getException));
     }
 
-    public List<Usuario> getUsuarios() {
-        var usuarioAutenticado = getUsuarioAutenticado();
-        if (usuarioAutenticado.isAdmin()) {
-            return usuarioRepository.findAll();
-        }
-        return List.of(usuarioRepository.findById(usuarioAutenticado.getId())
-            .orElseThrow(USUARIO_NAO_ENCONTRADO::getException));
+    public List<Usuario> getUsuarios(UsuarioFiltros filtros) {
+        return usuarioRepository.findAllPredicate(filtros.toPredicate().build());
     }
 
     public UsuarioAutenticado findUsuarioAutenticadoByEmail() {

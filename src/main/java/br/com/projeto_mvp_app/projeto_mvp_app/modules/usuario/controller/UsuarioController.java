@@ -1,11 +1,13 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.controller;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioFiltros;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,8 +24,8 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public List<Usuario> getUsuarios() {
-        return usuarioService.getUsuarios();
+    public List<Usuario> getUsuarios(@Validated UsuarioFiltros usuarioFiltros) {
+        return usuarioService.getUsuarios(usuarioFiltros);
     }
 
     @GetMapping("/check-session")
