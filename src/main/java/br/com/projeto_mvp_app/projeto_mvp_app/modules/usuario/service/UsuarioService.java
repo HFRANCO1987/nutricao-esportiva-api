@@ -7,6 +7,8 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.repository.UsuarioRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado.of;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.exception.UsuarioException.*;
@@ -89,8 +90,8 @@ public class UsuarioService {
         return of(usuarioRepository.findByEmail(email).orElseThrow(USUARIO_NAO_ENCONTRADO::getException));
     }
 
-    public List<Usuario> getUsuarios(UsuarioFiltros filtros) {
-        return usuarioRepository.findAllPredicate(filtros.toPredicate().build());
+    public Page<Usuario> getUsuarios(Integer page, Integer size, UsuarioFiltros filtros) {
+        return usuarioRepository.findAll(filtros.toPredicate().build(), PageRequest.of(page, size));
     }
 
     public UsuarioAutenticado findUsuarioAutenticadoByEmail() {
