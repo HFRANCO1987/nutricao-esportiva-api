@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado.of;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.exception.UsuarioException.*;
@@ -92,6 +93,10 @@ public class UsuarioService {
 
     public Page<Usuario> getUsuarios(Integer page, Integer size, UsuarioFiltros filtros) {
         return usuarioRepository.findAll(filtros.toPredicate().build(), PageRequest.of(page, size));
+    }
+
+    public List<Usuario> getUsuariosPageableQueryDsl(Integer page, Integer size, UsuarioFiltros filtros) {
+        return usuarioRepository.findAllPredicatePageable(PageRequest.of(page, size), filtros.toPredicate().build());
     }
 
     public UsuarioAutenticado findUsuarioAutenticadoByEmail() {

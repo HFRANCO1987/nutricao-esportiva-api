@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -28,6 +29,13 @@ public class UsuarioController {
                                      @RequestParam("page") Integer page,
                                      @RequestParam("size") Integer size) {
         return usuarioService.getUsuarios(page, size, usuarioFiltros);
+    }
+
+    @GetMapping("page")
+    public List<Usuario> getUsuariosPageableQueryDsl(@Validated UsuarioFiltros usuarioFiltros,
+                                     @RequestParam("page") Integer page,
+                                     @RequestParam("size") Integer size) {
+        return usuarioService.getUsuariosPageableQueryDsl(page, size, usuarioFiltros);
     }
 
     @GetMapping("/check-session")
