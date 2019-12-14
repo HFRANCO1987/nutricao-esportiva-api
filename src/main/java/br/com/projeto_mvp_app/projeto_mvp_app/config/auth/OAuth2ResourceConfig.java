@@ -22,6 +22,7 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
             "/oauth/token",
             "/oauth/authorize",
             "/api/usuarios/novo",
+            "/swagger-ui.html"
         };
 
         http
@@ -32,6 +33,7 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
             .authorizeRequests()
             .antMatchers(permitAll).permitAll()
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-            .antMatchers("/api/usuarios/**").hasAnyRole(ADMIN.name(), USER.name());
+            .antMatchers("/api/usuarios/**").hasAnyRole(ADMIN.name(), USER.name())
+            .antMatchers("/api/taco/alimentos/**").hasAnyRole(ADMIN.name(), USER.name());
     }
 }

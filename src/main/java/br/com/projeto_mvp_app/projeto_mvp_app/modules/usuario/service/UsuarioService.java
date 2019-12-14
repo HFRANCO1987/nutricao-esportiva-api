@@ -1,11 +1,14 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioFiltros;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.repository.UsuarioRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -88,13 +91,12 @@ public class UsuarioService {
         return of(usuarioRepository.findByEmail(email).orElseThrow(USUARIO_NAO_ENCONTRADO::getException));
     }
 
-    public List<Usuario> getUsuarios() {
-        var usuarioAutenticado = getUsuarioAutenticado();
-        if (usuarioAutenticado.isAdmin()) {
-            return usuarioRepository.findAll();
-        }
-        return List.of(usuarioRepository.findById(usuarioAutenticado.getId())
-            .orElseThrow(USUARIO_NAO_ENCONTRADO::getException));
+    public Page<Usuario> getUsuarios(Integer page, Integer size, UsuarioFiltros filtros) {
+        return usuarioRepository.findAll(filtros.toPredicate().build(), PageRequest.of(page, size));
+    }
+
+    public List<Usuario> getUsuariosPageableQueryDsl(Integer page, Integer size, UsuarioFiltros filtros) {
+        return usuarioRepository.findAllPredicatePageable(PageRequest.of(page, size), filtros.toPredicate().build());
     }
 
     public UsuarioAutenticado findUsuarioAutenticadoByEmail() {
