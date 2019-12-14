@@ -14,12 +14,12 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-#    jdbc-url: jdbc:postgresql://ec2-54-235-246-201.compute-1.amazonaws.com:5432/d92mg9h3sucp78
-#    username: mvhrsysowbxmxt
-#    password: 9a95933171eaf333afbbc9f7d2705dffab7c87c650d01a2888c16496df721a2a
-    jdbc-url: jdbc:postgresql://sqlvhnegrisoli.ddns.net:5432/nutricao_esportiva
-    username: postgres
-    password: 1y5h8j
+    jdbc-url: jdbc:postgresql://ec2-54-235-246-201.compute-1.amazonaws.com:5432/d92mg9h3sucp78
+    username: mvhrsysowbxmxt
+    password: 9a95933171eaf333afbbc9f7d2705dffab7c87c650d01a2888c16496df721a2a
+#    jdbc-url: jdbc:postgresql://sqlvhnegrisoli.ddns.net:5432/nutricao_esportiva
+#    username: postgres
+#    password: 1y5h8j
     initialization-mode: always
     initialize: true
     continue-on-error: true
