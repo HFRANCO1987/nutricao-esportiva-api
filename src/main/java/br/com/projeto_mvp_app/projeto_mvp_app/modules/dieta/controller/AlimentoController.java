@@ -1,12 +1,11 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.controller;
 
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Alimento;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.AlimentoRepository;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.AlimentoResponse;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Categoria;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.service.AlimentoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,15 +14,33 @@ import java.util.List;
 public class AlimentoController {
 
     @Autowired
-    private AlimentoRepository alimentoRepository;
+    private AlimentoService alimentoService;
 
-    @GetMapping("/{descricao}")
-    public List<Alimento> buscarPorDescricao(@PathVariable String descricao) {
-        return alimentoRepository.findByDescricaoContainingIgnoreCase(descricao);
+    @GetMapping("descricao/{descricao}")
+    public List<AlimentoResponse> buscarPorDescricao(@PathVariable String descricao) {
+        return alimentoService.buscarPorDescricao(descricao);
     }
 
-    @GetMapping
-    public List<Alimento> buscarPorDescricao() {
-        return alimentoRepository.findAll();
+    @GetMapping("descricao/{descricao}/paginado")
+    public Page<AlimentoResponse> buscarPorDescricaoPaginado(@PathVariable String descricao,
+                                                     @RequestParam("page") Integer page,
+                                                     @RequestParam("size") Integer size) {
+        return alimentoService.buscarPorDescricaoPaginado(page, size, descricao);
+    }
+
+    @GetMapping("paginado")
+    public Page<AlimentoResponse> buscarTodosPaginado(@RequestParam("page") Integer page,
+                                                     @RequestParam("size") Integer size) {
+        return alimentoService.buscarTodosPaginado(page, size);
+    }
+
+    @GetMapping("{id}")
+    public AlimentoResponse buscarPorId(@PathVariable Integer id) {
+        return alimentoService.buscarPorId(id);
+    }
+
+    @GetMapping("categorias")
+    public List<Categoria> listarCategorias() {
+        return alimentoService.listarCategorias();
     }
 }

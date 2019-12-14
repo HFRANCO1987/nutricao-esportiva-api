@@ -21,7 +21,8 @@ public class OAuth2ResourceConfig extends ResourceServerConfigurerAdapter {
             "/login/**",
             "/oauth/token",
             "/oauth/authorize",
-            "/api/usuarios/novo"
+            "/api/usuarios/novo",
+            "/swagger-ui.html"
         };
 
         http

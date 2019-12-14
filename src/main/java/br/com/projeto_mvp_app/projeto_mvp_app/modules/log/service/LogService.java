@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.config.Aplicacao.APLICACAO;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.log.enums.ETipoOperacao.CONSULTANDO;
@@ -19,7 +20,6 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
 
-
 @Service
 @SuppressWarnings("PMD.TooManyStaticImports")
 public class LogService {
@@ -27,8 +27,8 @@ public class LogService {
     private static final List<String> URLS_IGNORADAS = List.of(
         "/api/usuarios/usuario-autenticado",
         "/api/usuarios/check-session",
-        "/api/usuarios/tipos-acesso",
-        "/oauth/token"
+        "/oauth/token",
+        "swagger"
     );
 
     @Autowired
@@ -37,8 +37,8 @@ public class LogService {
     private LogSender logSender;
 
     public void gerarLogUsuario(HttpServletRequest request) {
-        var usuarioLogado = usuarioService.getUsuarioAutenticado();
-        if (!URLS_IGNORADAS.contains(request.getRequestURI())) {
+        if (isUrlValidaParaLog(request.getRequestURI())) {
+            var usuarioLogado = usuarioService.getUsuarioAutenticado();
             var log = LogRequest
                 .builder()
                 .dataAcesso(LocalDateTime.now())
@@ -52,6 +52,16 @@ public class LogService {
                 .build();
             logSender.produceMessage(log);
         }
+    }
+
+    private boolean isUrlValidaParaLog(String uri) {
+        var isValida = new AtomicBoolean(true);
+        URLS_IGNORADAS.forEach(urlIgnorada -> {
+            if (uri.contains(urlIgnorada)) {
+                isValida.set(false);
+            }
+        });
+        return isValida.get();
     }
 
     private String definirTipoAcesso(String metodo) {
