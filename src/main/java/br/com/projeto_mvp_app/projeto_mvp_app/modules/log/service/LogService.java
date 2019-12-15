@@ -27,8 +27,11 @@ public class LogService {
     private static final List<String> URLS_IGNORADAS = List.of(
         "/api/usuarios/usuario-autenticado",
         "/api/usuarios/check-session",
+        "/api/usuarios/novo",
         "/oauth/token",
-        "swagger"
+        "swagger",
+        "/error",
+        "is-authenticated"
     );
 
     @Autowired

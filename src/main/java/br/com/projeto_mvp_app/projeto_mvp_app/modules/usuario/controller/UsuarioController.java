@@ -1,8 +1,6 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.controller;
 
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioFiltros;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.*;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,8 +63,20 @@ public class UsuarioController {
         return usuarioService.getUsuarioAutenticadoAtualizaUltimaData();
     }
 
-    @GetMapping("/usuario-autenticado-email")
-    public UsuarioAutenticado findUsuarioAutenticadoByEmail() {
-        return usuarioService.findUsuarioAutenticadoByEmail();
+    @GetMapping("/is-authenticated")
+    public boolean verificarSeEstaAutenticado() {
+        return usuarioService.existeUsuarioAutenticado();
+    }
+
+    @PutMapping("{id}/atualizar-peso-altura")
+    public UsuarioAnalisePesoResponse atualizarPesoAltura(@PathVariable Integer id,
+                                                          @RequestParam("peso") Double peso,
+                                                          @RequestParam("altura") Double altura) {
+        return usuarioService.tratarUsuarioPeso(peso, altura, id);
+    }
+
+    @GetMapping("historico-peso-altura")
+    public UsuarioPesoAlturaResponse buscarUsuarioComHistoricoPesoAltura() {
+        return usuarioService.buscarUsuarioComHistoricoDePesoEAltura();
     }
 }

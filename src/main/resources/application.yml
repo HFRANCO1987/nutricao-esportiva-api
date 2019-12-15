@@ -18,6 +18,7 @@ spring:
     username: mvhrsysowbxmxt
     password: 9a95933171eaf333afbbc9f7d2705dffab7c87c650d01a2888c16496df721a2a
 #    jdbc-url: jdbc:postgresql://sqlvhnegrisoli.ddns.net:5432/nutricao_esportiva
+#    jdbc-url: jdbc:postgresql://localhost:5432/nutricao_esportiva
 #    username: postgres
 #    password: 1y5h8j
     initialization-mode: always

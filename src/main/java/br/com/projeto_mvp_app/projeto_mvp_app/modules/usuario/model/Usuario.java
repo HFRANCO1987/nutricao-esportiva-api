@@ -1,6 +1,7 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.ESexo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +10,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao.USER;
 import static org.springframework.util.ObjectUtils.isEmpty;
@@ -27,33 +29,40 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-    @Column(name = "EMAIL")
-    @NotNull
+    @Column(name = "EMAIL", nullable = false)
     private String email;
 
-    @Column(name = "NOME", length = 120)
-    @NotNull
+    @Column(name = "NOME", nullable = false, length = 120)
     private String nome;
 
-    @Column(name = "SENHA")
-    @NotNull
+    @JsonIgnore
+    @Column(name = "SENHA", nullable = false)
     private String senha;
 
     @ManyToOne
-    @JoinColumn(name = "FK_PERMISSAO")
-    @NotNull
+    @JoinColumn(name = "FK_PERMISSAO", nullable = false)
     private Permissao permissao;
 
-    @Column(name = "DATA_CADASTRO")
-    @NotNull
+    @Column(name = "DATA_CADASTRO", nullable = false, updatable = false)
     private LocalDateTime dataCadastro;
 
     @Column(name = "ULTIMO_ACESSO")
-    @NotNull
     private LocalDateTime ultimoAcesso;
 
-    @Column(name = "CPF", length = 14)
+    @Column(name = "CPF", nullable = false, length = 14)
     private String cpf;
+
+    @Column(name = "DATA_NASCIMENTO", nullable = false)
+    private LocalDate dataNascimento;
+
+    @Column(name = "SEXO", nullable = false, length = 10)
+    @Enumerated(EnumType.STRING)
+    private ESexo sexo;
+
+    @Transient
+    public Integer getIdade() {
+        return Period.between(this.dataNascimento, LocalDate.now()).getYears();
+    }
 
     @JsonIgnore
     public boolean isNovoCadastro() {
