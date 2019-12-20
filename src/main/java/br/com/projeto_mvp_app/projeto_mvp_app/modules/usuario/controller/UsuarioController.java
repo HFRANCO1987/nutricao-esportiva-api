@@ -1,11 +1,11 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.controller;
 
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.response.SuccessResponseDetails;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.*;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,15 +42,15 @@ public class UsuarioController {
     }
 
     @PostMapping("/novo")
-    @ResponseStatus(code = HttpStatus.CREATED, reason = "Usuário inserido com sucesso!")
-     public void novoUsuario(@RequestBody @Valid UsuarioRequest usuarioRequest) {
+     public SuccessResponseDetails novoUsuario(@RequestBody @Valid UsuarioRequest usuarioRequest) {
         usuarioService.save(usuarioRequest);
+        return new SuccessResponseDetails("Usuário inserido com sucesso!");
     }
 
     @PutMapping("/alterar-acesso")
-    @ResponseStatus(code = HttpStatus.OK, reason = "Usuário alterado com sucesso!")
-    public void alterarDadosUsuario(@RequestBody @Valid UsuarioRequest usuarioRequest) {
+    public SuccessResponseDetails alterarDadosUsuario(@RequestBody @Valid UsuarioRequest usuarioRequest) {
         usuarioService.save(usuarioRequest);
+        return new SuccessResponseDetails("Usuário alterado com sucesso!");
     }
 
     @GetMapping("/get-token")
