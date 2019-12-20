@@ -1,6 +1,7 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.PesoAltura;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -32,7 +32,6 @@ public class UsuarioAnalisePesoResponse {
     private static final String AUMENTOU = " aumentou";
     private static final String MANTEVE = " manteve";
     private static final Integer NUMERO_CASAS_DECIMAIS = 2;
-    private static DecimalFormat df = new DecimalFormat("0.00");
 
     private String mensagem;
     private Double pesoAtual;
@@ -45,7 +44,7 @@ public class UsuarioAnalisePesoResponse {
     private BigDecimal percentualPeso;
     private String diferencaPeriodo;
 
-    public static UsuarioAnalisePesoResponse of(String nome, PesoAltura atual, PesoAltura anterior) {
+    public static UsuarioAnalisePesoResponse of(Usuario usuario, PesoAltura atual, PesoAltura anterior) {
         var response = new UsuarioAnalisePesoResponse();
         response.setPesoAtual(atual.getPeso());
         response.setDataPesoAtual(atual.getDataCadastro().toLocalDate());
@@ -55,7 +54,7 @@ public class UsuarioAnalisePesoResponse {
             anterior.getDataCadastro().toLocalDate()));
         response.setDiferencaPeso(calcularDiferencaPeso(atual.getPeso(), anterior.getPeso()));
         response.setPercentualPeso(calcularPercentualPeso(atual.getPeso(), anterior.getPeso()));
-        response.setMensagem(definirMensagem(nome, atual.getPeso(), anterior.getPeso(),
+        response.setMensagem(definirMensagem(usuario.getNome(), atual.getPeso(), anterior.getPeso(),
             response.getDiferencaPeriodo()));
         return response;
     }
@@ -89,16 +88,16 @@ public class UsuarioAnalisePesoResponse {
     }
 
     private static BigDecimal calcularDiferencaPeso(Double pesoAtual, Double pesoAnterior) {
-        return new BigDecimal(Math.abs(pesoAtual - pesoAnterior)).setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP);
+        return BigDecimal.valueOf(Math.abs(pesoAtual - pesoAnterior)).setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP);
     }
 
     private static BigDecimal calcularPercentualPeso(Double pesoAtual, Double pesoAnterior) {
         if (pesoAtual < pesoAnterior) {
-            return new BigDecimal(Math.abs(100 - (pesoAtual / pesoAnterior) * 100))
+            return BigDecimal.valueOf(Math.abs(100 - (pesoAtual / pesoAnterior) * 100))
                 .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP);
         }
         if (pesoAtual > pesoAnterior) {
-            return new BigDecimal(Math.abs(100 - (pesoAnterior / pesoAtual) * 100))
+            return BigDecimal.valueOf(Math.abs(100 - (pesoAnterior / pesoAtual) * 100))
                 .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP);
         } else {
             return new BigDecimal(ZERO);

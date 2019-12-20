@@ -1,5 +1,7 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service;
 
+import br.com.caelum.stella.validation.CPFValidator;
+import br.com.projeto_mvp_app.projeto_mvp_app.config.exception.ValidacaoException;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.enums.EBoolean;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.*;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.PesoAltura;
@@ -49,9 +51,23 @@ public class UsuarioService {
     }
 
     private void validarDadosUsuario(Usuario usuario) {
+        validarCpf(usuario);
         validarDataNascimento(usuario);
         validarEmailExistente(usuario);
         validarCpfExistente(usuario);
+    }
+
+    private void validarCpf(Usuario usuario) {
+        if (!isEmpty(usuario.getCpf())) {
+            try {
+                var cpfValidator = new CPFValidator();
+                cpfValidator.assertValid(usuario.getCpf());
+            } catch (Exception ex) {
+                throw new ValidacaoException("O CPF está inválido.");
+            }
+        } else {
+            throw new ValidacaoException("O CPF deve ser informado.");
+        }
     }
 
     private void validarDataNascimento(Usuario usuario) {
@@ -143,8 +159,9 @@ public class UsuarioService {
     private UsuarioAnalisePesoResponse tratarAnalisePeso(PesoAltura atual) {
         var anterior = pesoAlturaRepository.findTop1ByUsuarioIdAndPesoAlturaAtualOrderByDataCadastroDesc(
             atual.getUsuario().getId(), EBoolean.F);
-        var usuarioNome = getUsuarioAutenticado().getNome();
-        return UsuarioAnalisePesoResponse.of(usuarioNome, atual, anterior.get());
+        var usuario = usuarioRepository.findById(getUsuarioAutenticado().getId())
+            .orElseThrow(USUARIO_NAO_ENCONTRADO::getException);
+        return UsuarioAnalisePesoResponse.of(usuario, atual, anterior.get());
     }
 
     private void tratarHistoricoDePesoAltura(Integer usuarioId) {
