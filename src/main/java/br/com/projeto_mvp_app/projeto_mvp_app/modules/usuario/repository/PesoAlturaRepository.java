@@ -19,6 +19,8 @@ public interface PesoAlturaRepository extends JpaRepository<PesoAltura, Integer>
     Optional<PesoAltura> findTop1ByUsuarioIdAndPesoAlturaAtualOrderByDataCadastroDesc(Integer usuarioId,
                                                                                       EBoolean pesoAlturaAtual);
 
+    Optional<PesoAltura> findByUsuarioIdAndPesoAlturaAtual(Integer usuarioId, EBoolean pesoAlturaAtual);
+
     @Modifying
     @Query(value = "update PesoAltura pa set pa.pesoAlturaAtual = :pesoAlturaAtual where usuario = :usuario")
     void atualizarPesoAlturaAtualByUsuarioId(EBoolean pesoAlturaAtual, Usuario usuario);

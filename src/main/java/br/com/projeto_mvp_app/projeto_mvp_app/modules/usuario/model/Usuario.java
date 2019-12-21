@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.time.Period;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao.USER;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.ESexo.FEMININO;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.ESexo.MASCULINO;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Entity
@@ -67,6 +69,16 @@ public class Usuario {
     @JsonIgnore
     public boolean isNovoCadastro() {
         return isEmpty(id);
+    }
+
+    @JsonIgnore
+    public boolean isMasculino() {
+        return !isEmpty(sexo) && sexo.equals(MASCULINO);
+    }
+
+    @JsonIgnore
+    public boolean isFeminino() {
+        return !isEmpty(sexo) && sexo.equals(FEMININO);
     }
 
     public Usuario(Integer id) {

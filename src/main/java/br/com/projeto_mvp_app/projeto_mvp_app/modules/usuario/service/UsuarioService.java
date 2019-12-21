@@ -169,4 +169,9 @@ public class UsuarioService {
             pesoAlturaRepository.atualizarPesoAlturaAtualByUsuarioId(EBoolean.F, new Usuario(usuarioId));
         }
     }
+
+    public UsuarioAnalisePesoResponse consultarAnalisePesoAltura() {
+        return tratarAnalisePeso(pesoAlturaRepository.findByUsuarioIdAndPesoAlturaAtual(getUsuarioAutenticado()
+            .getId(), EBoolean.V).orElseThrow(() -> new ValidacaoException("O peso atual não foi encontrado.")));
+    }
 }
