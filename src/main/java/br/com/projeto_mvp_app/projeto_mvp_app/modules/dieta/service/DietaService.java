@@ -29,4 +29,9 @@ public class DietaService {
         var usuarioLogado = usuarioService.getUsuarioAutenticado();
         dietaRepository.save(Dieta.builder().usuario(new Usuario(usuarioLogado.getId())).build());
     }
+
+    public void editarDieta(Integer id) {
+        var usuarioLogado = usuarioService.getUsuarioAutenticado();
+        dietaRepository.save(Dieta.builder().usuario(new Usuario(usuarioLogado.getId())).build());
+    }
 }

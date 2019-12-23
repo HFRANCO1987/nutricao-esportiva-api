@@ -47,8 +47,11 @@ public class UsuarioAnalisePesoResponse {
     private BigDecimal caloriasPorDiaSemExercicio;
     private BigDecimal caloriasPorDiaComExercicio;
     private CaloriaResponse resultadoCalorias;
+    private UsuarioPesoAlturaResponse usuarioPesoAlturaHistorico;
 
-    public static UsuarioAnalisePesoResponse of(Usuario usuario, PesoAltura atual, PesoAltura anterior) {
+    public static UsuarioAnalisePesoResponse of(Usuario usuario, PesoAltura atual,
+                                                PesoAltura anterior,
+                                                UsuarioPesoAlturaResponse usuarioPesoAlturaHistorico) {
         var response = new UsuarioAnalisePesoResponse();
         response.setPesoAtual(atual.getPeso());
         response.setDataPesoAtual(atual.getDataCadastro().toLocalDate());
@@ -65,6 +68,7 @@ public class UsuarioAnalisePesoResponse {
             calcularTaxaMetabolicaBasal(usuario, atual).doubleValue() * TRINTA_POR_CENTO)
             .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP));
         response.setResultadoCalorias(CaloriaResponse.of(atual.getPeso()));
+        response.setUsuarioPesoAlturaHistorico(usuarioPesoAlturaHistorico);
         return response;
     }
 

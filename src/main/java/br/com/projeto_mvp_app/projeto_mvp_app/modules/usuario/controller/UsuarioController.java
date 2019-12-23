@@ -1,7 +1,10 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.controller;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.response.SuccessResponseDetails;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.*;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAnalisePesoResponse;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioFiltros;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,10 +80,5 @@ public class UsuarioController {
     @GetMapping("analise-peso-altura")
     public UsuarioAnalisePesoResponse consultarAnalisePesoAltura() {
         return usuarioService.consultarAnalisePesoAltura();
-    }
-
-    @GetMapping("historico-peso-altura")
-    public UsuarioPesoAlturaResponse buscarUsuarioComHistoricoPesoAltura() {
-        return usuarioService.buscarUsuarioComHistoricoDePesoEAltura();
     }
 }

@@ -162,8 +162,9 @@ public class UsuarioService {
             atual.getUsuario().getId(), EBoolean.F);
         var usuario = usuarioRepository.findById(getUsuarioAutenticado().getId())
             .orElseThrow(USUARIO_NAO_ENCONTRADO::getException);
-        return anterior.map(pesoAnterior -> UsuarioAnalisePesoResponse.of(usuario, atual, pesoAnterior))
-            .orElseGet(() -> UsuarioAnalisePesoResponse.of(usuario, atual, atual));
+        var historico = buscarUsuarioComHistoricoDePesoEAltura();
+        return anterior.map(pesoAnterior -> UsuarioAnalisePesoResponse.of(usuario, atual, pesoAnterior, historico))
+            .orElseGet(() -> UsuarioAnalisePesoResponse.of(usuario, atual, atual, historico));
     }
 
     private void tratarHistoricoDePesoAltura(Integer usuarioId) {
