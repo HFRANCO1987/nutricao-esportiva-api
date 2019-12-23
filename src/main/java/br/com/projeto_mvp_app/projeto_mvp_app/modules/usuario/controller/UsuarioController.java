@@ -68,11 +68,10 @@ public class UsuarioController {
         return usuarioService.existeUsuarioAutenticado();
     }
 
-    @PutMapping("{id}/atualizar-peso-altura")
-    public UsuarioAnalisePesoResponse atualizarPesoAltura(@PathVariable Integer id,
-                                                          @RequestParam("peso") Double peso,
+    @PutMapping("atualizar-peso-altura")
+    public UsuarioAnalisePesoResponse atualizarPesoAltura(@RequestParam("peso") Double peso,
                                                           @RequestParam("altura") Double altura) {
-        return usuarioService.tratarUsuarioPeso(peso, altura, id);
+        return usuarioService.tratarUsuarioPeso(peso, altura, null);
     }
 
     @GetMapping("historico-peso-altura")

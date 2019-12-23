@@ -147,11 +147,12 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioAnalisePesoResponse tratarUsuarioPeso(Double peso, Double altura, Integer usuarioId) {
-        tratarHistoricoDePesoAltura(usuarioId);
-        var atual = pesoAlturaRepository.save(PesoAltura.of(peso, altura, usuarioId));
         if (existeUsuarioAutenticado()) {
-            return tratarAnalisePeso(atual);
+            var usuarioLogadoId = getUsuarioAutenticado().getId();
+            tratarHistoricoDePesoAltura(usuarioLogadoId);
+            return tratarAnalisePeso(pesoAlturaRepository.save(PesoAltura.of(peso, altura, usuarioLogadoId)));
         } else {
+            pesoAlturaRepository.save(PesoAltura.of(peso, altura, usuarioId));
             return new UsuarioAnalisePesoResponse();
         }
     }
@@ -161,7 +162,8 @@ public class UsuarioService {
             atual.getUsuario().getId(), EBoolean.F);
         var usuario = usuarioRepository.findById(getUsuarioAutenticado().getId())
             .orElseThrow(USUARIO_NAO_ENCONTRADO::getException);
-        return UsuarioAnalisePesoResponse.of(usuario, atual, anterior.get());
+        return anterior.map(pesoAnterior -> UsuarioAnalisePesoResponse.of(usuario, atual, pesoAnterior))
+            .orElseGet(() -> UsuarioAnalisePesoResponse.of(usuario, atual, atual));
     }
 
     private void tratarHistoricoDePesoAltura(Integer usuarioId) {
