@@ -1,6 +1,7 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.enums.EBoolean;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class PesoAltura {
     private Integer id;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "FK_USUARIO", nullable = false)
     private Usuario usuario;
 

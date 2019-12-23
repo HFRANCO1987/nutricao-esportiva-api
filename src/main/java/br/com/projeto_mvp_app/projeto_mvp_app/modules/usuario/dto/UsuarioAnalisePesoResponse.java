@@ -32,6 +32,7 @@ public class UsuarioAnalisePesoResponse {
     private static final String AUMENTOU = " aumentou";
     private static final String MANTEVE = " manteve";
     private static final Integer NUMERO_CASAS_DECIMAIS = 2;
+    private static final Double TRINTA_POR_CENTO = 1.30;
 
     private String mensagem;
     private Double pesoAtual;
@@ -43,6 +44,9 @@ public class UsuarioAnalisePesoResponse {
     private BigDecimal diferencaPeso;
     private BigDecimal percentualPeso;
     private String diferencaPeriodo;
+    private BigDecimal caloriasPorDiaSemExercicio;
+    private BigDecimal caloriasPorDiaComExercicio;
+    private CaloriaResponse resultadoCalorias;
 
     public static UsuarioAnalisePesoResponse of(Usuario usuario, PesoAltura atual, PesoAltura anterior) {
         var response = new UsuarioAnalisePesoResponse();
@@ -56,6 +60,11 @@ public class UsuarioAnalisePesoResponse {
         response.setPercentualPeso(calcularPercentualPeso(atual.getPeso(), anterior.getPeso()));
         response.setMensagem(definirMensagem(usuario.getNome(), atual.getPeso(), anterior.getPeso(),
             response.getDiferencaPeriodo()));
+        response.setCaloriasPorDiaSemExercicio(calcularTaxaMetabolicaBasal(usuario, atual));
+        response.setCaloriasPorDiaComExercicio(BigDecimal.valueOf(
+            calcularTaxaMetabolicaBasal(usuario, atual).doubleValue() * TRINTA_POR_CENTO)
+            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP));
+        response.setResultadoCalorias(CaloriaResponse.of(atual.getPeso()));
         return response;
     }
 
@@ -118,5 +127,15 @@ public class UsuarioAnalisePesoResponse {
                 + "kg (" + calcularPercentualPeso(pesoAtual, pesoAnterior) + "%) em " + diferencaPeriodo;
         }
         return "Olá, " + nome + ", você manteve seu peso atual de " + pesoAtual + "kg";
+    }
+
+    private static BigDecimal calcularTaxaMetabolicaBasal(Usuario usuario, PesoAltura pesoAltura) {
+        if (usuario.isMasculino()) {
+            return BigDecimal.valueOf(66.5 + (5 * pesoAltura.getAltura()) + (13.8 * pesoAltura.getPeso())
+                - (6.8 * usuario.getIdade())).setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP);
+        } else {
+            return BigDecimal.valueOf(655.1 + (1.8 * pesoAltura.getAltura()) + (9.5 * pesoAltura.getPeso())
+                - (4.7 * usuario.getIdade())).setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP);
+        }
     }
 }

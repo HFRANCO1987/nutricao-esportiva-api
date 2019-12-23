@@ -74,6 +74,11 @@ public class UsuarioController {
         return usuarioService.tratarUsuarioPeso(peso, altura, null);
     }
 
+    @GetMapping("analise-peso-altura")
+    public UsuarioAnalisePesoResponse consultarAnalisePesoAltura() {
+        return usuarioService.consultarAnalisePesoAltura();
+    }
+
     @GetMapping("historico-peso-altura")
     public UsuarioPesoAlturaResponse buscarUsuarioComHistoricoPesoAltura() {
         return usuarioService.buscarUsuarioComHistoricoDePesoEAltura();
