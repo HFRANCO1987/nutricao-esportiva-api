@@ -78,4 +78,8 @@ public class Alimento {
     private Double niaci_mg;
     @Column
     private Double vitami_c_mg;
+
+    public Alimento(Integer id) {
+        this.id = id;
+    }
 }

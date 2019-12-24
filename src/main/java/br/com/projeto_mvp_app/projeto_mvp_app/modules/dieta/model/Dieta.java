@@ -1,5 +1,6 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model;
 
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Data
 @Entity
@@ -24,6 +27,9 @@ public class Dieta {
     @Column(name = "DATA_CADASTRO", nullable = false, updatable = false)
     private LocalDateTime dataCadastro;
 
+    @Column(name = "DESCRICAO", nullable = false)
+    private String descricao;
+
     @JoinColumn(name = "FK_USUARIO", nullable = false)
     @ManyToOne
     private Usuario usuario;
@@ -31,5 +37,18 @@ public class Dieta {
     @PrePersist
     public void prePersist() {
         dataCadastro = LocalDateTime.now();
+    }
+
+    public Dieta(Integer id) {
+        this.id = id;
+    }
+
+    public static Dieta of(DietaRequest request, Integer usuarioId) {
+        return Dieta
+            .builder()
+            .id(isEmpty(request.getId()) ? null : request.getId())
+            .descricao(request.getDescricao())
+            .usuario(new Usuario(usuarioId))
+            .build();
     }
 }

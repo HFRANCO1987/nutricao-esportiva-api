@@ -26,4 +26,8 @@ public class Periodo {
 
     @Column(name = "DESCRICAO", nullable = false)
     private String descricao;
+
+    public Periodo(Integer id) {
+        this.id = id;
+    }
 }

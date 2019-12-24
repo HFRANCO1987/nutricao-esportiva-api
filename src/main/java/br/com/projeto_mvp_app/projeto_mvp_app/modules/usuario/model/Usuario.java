@@ -1,5 +1,6 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model;
 
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.ESexo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -92,5 +93,12 @@ public class Usuario {
         usuario.setUltimoAcesso(LocalDateTime.now());
         usuario.setPermissao(new Permissao(1, USER, "Usuário"));
         return usuario;
+    }
+
+    public static Usuario of(UsuarioAutenticado usuarioAutenticado) {
+        return Usuario
+            .builder()
+            .id(usuarioAutenticado.getId())
+            .build();
     }
 }

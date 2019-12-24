@@ -1,5 +1,6 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model;
 
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.PeriodoAlimentoDietaRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,4 +31,13 @@ public class PeriodoAlimentoDieta {
     @JoinColumn(name = "FK_ALIMENTO", nullable = false)
     @ManyToOne
     private Alimento alimento;
+
+    public static PeriodoAlimentoDieta of(PeriodoAlimentoDietaRequest request) {
+        return PeriodoAlimentoDieta
+            .builder()
+            .alimento(new Alimento(request.getAlimentoId()))
+            .dieta(new Dieta(request.getDietaId()))
+            .periodo(new Periodo(request.getPeriodoId()))
+            .build();
+    }
 }
