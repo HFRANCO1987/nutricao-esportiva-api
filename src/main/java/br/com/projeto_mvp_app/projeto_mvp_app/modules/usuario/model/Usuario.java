@@ -64,7 +64,7 @@ public class Usuario {
 
     @Transient
     public Integer getIdade() {
-        return Period.between(this.dataNascimento, LocalDate.now()).getYears();
+        return isEmpty(this.dataNascimento) ? 0 : Period.between(this.dataNascimento, LocalDate.now()).getYears();
     }
 
     @JsonIgnore

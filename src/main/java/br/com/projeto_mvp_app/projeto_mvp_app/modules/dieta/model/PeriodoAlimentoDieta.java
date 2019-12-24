@@ -1,6 +1,7 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.PeriodoAlimentoDietaRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class PeriodoAlimentoDieta {
     private Integer id;
 
     @JoinColumn(name = "FK_DIETA", nullable = false)
+    @JsonIgnore
     @ManyToOne
     private Dieta dieta;
 

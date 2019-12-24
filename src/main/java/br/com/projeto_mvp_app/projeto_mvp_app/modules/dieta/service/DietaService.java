@@ -24,6 +24,9 @@ import java.util.stream.Collectors;
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class DietaService {
 
+    private static final ValidacaoException DIETA_NAO_ENCONTRADA_EXCEPTION =
+        new ValidacaoException("A dieta não foi encontrada.");
+
     @Autowired
     private DietaRepository dietaRepository;
     @Autowired
@@ -81,7 +84,7 @@ public class DietaService {
     public DietaResponse buscarDietaComDadosCompletos(Integer id) {
         var usuarioLogadoId = usuarioService.getUsuarioAutenticado().getId();
         var dieta = dietaRepository.findByIdAndUsuarioId(id, usuarioLogadoId)
-            .orElseThrow(() -> new ValidacaoException("A dieta não foi encontrada."));
+            .orElseThrow(() -> DIETA_NAO_ENCONTRADA_EXCEPTION);
         var alimentosPeriodosDaDieta = periodoAlimentoDietaRepository.findByDietaId(dieta.getId());
         return DietaResponse.of(dieta, alimentosPeriodosDaDieta);
     }
