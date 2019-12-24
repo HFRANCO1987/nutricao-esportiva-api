@@ -142,7 +142,7 @@ public class UsuarioService {
         var usuarioId = getUsuarioAutenticado().getId();
         return UsuarioPesoAlturaResponse.of(usuarioRepository.findById(usuarioId)
                 .orElseThrow(USUARIO_NAO_ENCONTRADO::getException),
-            pesoAlturaRepository.findByUsuarioId(usuarioId));
+            pesoAlturaRepository.findByUsuarioIdOrderByDataCadastroDesc(usuarioId));
     }
 
     @Transactional

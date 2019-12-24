@@ -14,8 +14,6 @@ public interface PesoAlturaRepository extends JpaRepository<PesoAltura, Integer>
 
     Boolean existsByUsuarioId(Integer usuarioId);
 
-    List<PesoAltura> findByUsuarioId(Integer id);
-
     List<PesoAltura> findByUsuarioIdOrderByDataCadastroDesc(Integer id);
 
     Optional<PesoAltura> findTop1ByUsuarioIdAndPesoAlturaAtualOrderByDataCadastroDesc(Integer usuarioId,
