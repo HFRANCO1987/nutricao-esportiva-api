@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao.ADMIN;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao.USER;
@@ -21,11 +22,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private BCryptPasswordEncoder bcryptPasswordEncoder;
+    @Autowired
+    private TokenStore tokenStore;
 
     private static final String APPLICATION_CLIENT = "projeto_mvp_app-client";
     private static final String APPLICATION_SECRET = "projeto_mvp_app-secret";
@@ -54,7 +56,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.authenticationManager(authenticationManager)
+        endpoints
+            .tokenStore(tokenStore)
+            .authenticationManager(authenticationManager)
             .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
             .tokenEnhancer(new CustomTokenEnhancer());
     }
