@@ -33,6 +33,14 @@ spring:
         jdbc:
           lob.non_contextual_creation: true
 
+  redis:
+    host: redis-15905.c11.us-east-1-3.ec2.cloud.redislabs.com
+    port: 15905
+    password: AFecWasRJo7puz0vdbM6v6kc3CIx8CuH
+    pool:
+      max-active: 120
+      max-idle: 40
+
 oauth-clients:
   projeto_mvp_app:
     client: projeto_mvp_app-client
