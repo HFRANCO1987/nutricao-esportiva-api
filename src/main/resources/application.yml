@@ -56,6 +56,7 @@ app-config:
     biot-admin: biot-admin.topic
   key:
     usuario-log: usuario-log.queue
+  enable-rabbit: false
 
 management:
   health:

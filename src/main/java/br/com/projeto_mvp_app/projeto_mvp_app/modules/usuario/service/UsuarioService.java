@@ -2,6 +2,7 @@ package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service;
 
 import br.com.caelum.stella.validation.CPFValidator;
 import br.com.projeto_mvp_app.projeto_mvp_app.config.exception.ValidacaoException;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.dto.PageRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.enums.EBoolean;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.*;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.PesoAltura;
@@ -11,7 +12,6 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.repository.Usuario
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -130,12 +130,16 @@ public class UsuarioService {
         return !isEmpty(authentication) && !authentication.getName().equals("anonymousUser");
     }
 
-    public Page<Usuario> getUsuarios(Integer page, Integer size, UsuarioFiltros filtros) {
-        return usuarioRepository.findAll(filtros.toPredicate().build(), PageRequest.of(page, size));
+    public Page<Usuario> getUsuarios(PageRequest pageable, UsuarioFiltros filtros) {
+        return usuarioRepository.findAll(filtros.toPredicate().build(), pageable);
     }
 
-    public List<Usuario> getUsuariosPageableQueryDsl(Integer page, Integer size, UsuarioFiltros filtros) {
-        return usuarioRepository.findAllPredicatePageable(PageRequest.of(page, size), filtros.toPredicate().build());
+    public Page<UsuarioResponse> getUsuariosCustom(PageRequest pageable, UsuarioFiltros filtros) {
+        return usuarioRepository.findAll(filtros.toPredicate().build(), pageable).map(UsuarioResponse::of);
+    }
+
+    public List<Usuario> getUsuariosPageableQueryDsl(PageRequest pageable, UsuarioFiltros filtros) {
+        return usuarioRepository.findAllPredicatePageable(pageable, filtros.toPredicate().build());
     }
 
     public UsuarioPesoAlturaResponse buscarUsuarioComHistoricoDePesoEAltura() {
