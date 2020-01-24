@@ -1,6 +1,8 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.service;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.config.exception.ValidacaoException;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.dto.PageRequest;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaFiltros;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaResponse;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.PeriodoAlimentoDietaRequest;
@@ -13,12 +15,13 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.PeriodoRe
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 @SuppressWarnings("PMD.UnusedPrivateField")
@@ -45,27 +48,20 @@ public class DietaService {
     }
 
     @Transactional
-    public void salvarAlimentosPeriodoDaDieta(List<PeriodoAlimentoDietaRequest> request) {
-        if (request.isEmpty()) {
-            throw new ValidacaoException("É necessário informar a dieta, os alimentos e o período.");
-        }
-        validarDietaCorreta(request);
-        var dietaId = request.get(0).getDietaId();
-        validarPermissaoDoUsuarioSobreDieta(dietaId);
-        desvincularItensAtuaisDaDieta(dietaId);
-        periodoAlimentoDietaRepository.saveAll(request
-            .stream()
-            .map(PeriodoAlimentoDieta::of)
-            .collect(Collectors.toList()));
+    public void salvarAlimentosPeriodoDaDieta(PeriodoAlimentoDietaRequest request) {
+        validarDadosAlimentosPeriodosDieta(request);
+        validarPermissaoDoUsuarioSobreDieta(request.getDietaId());
+        desvincularItensAtuaisDaDieta(request.getDietaId());
+        periodoAlimentoDietaRepository.saveAll(criarListaPeriodosAlimentosDieta(request));
     }
 
-    private void validarDietaCorreta(List<PeriodoAlimentoDietaRequest> request) {
-        var dietaId = request.get(0).getDietaId();
-        request.forEach(itensDieta -> {
-            if (!itensDieta.getDietaId().equals(dietaId)) {
-                throw new ValidacaoException("Todos os itens devem ser vinculados para uma única dieta.");
-            }
-        });
+    private void validarDadosAlimentosPeriodosDieta(PeriodoAlimentoDietaRequest request) {
+        if (isEmpty(request.getDietaId())) {
+            throw new ValidacaoException("É necessário informar a dieta.");
+        }
+        if (isEmpty(request.getPeriodosAlimentos())) {
+            throw new ValidacaoException("É necessário informar os alimentos e os períodos.");
+        }
     }
 
     private void validarPermissaoDoUsuarioSobreDieta(Integer dietaId) {
@@ -81,6 +77,14 @@ public class DietaService {
         }
     }
 
+    private List<PeriodoAlimentoDieta> criarListaPeriodosAlimentosDieta(PeriodoAlimentoDietaRequest request) {
+        return request
+            .getPeriodosAlimentos()
+            .stream()
+            .map(periodosAlimentos -> PeriodoAlimentoDieta.of(request.getDietaId(), periodosAlimentos))
+            .collect(Collectors.toList());
+    }
+
     public DietaResponse buscarDietaComDadosCompletos(Integer id) {
         var usuarioLogadoId = usuarioService.getUsuarioAutenticado().getId();
         var dieta = dietaRepository.findByIdAndUsuarioId(id, usuarioLogadoId)
@@ -89,8 +93,8 @@ public class DietaService {
         return DietaResponse.of(dieta, alimentosPeriodosDaDieta);
     }
 
-    public Page<Dieta> buscarTodas(Integer page, Integer size) {
-        var usuarioLogadoId = usuarioService.getUsuarioAutenticado().getId();
-        return dietaRepository.findByUsuarioId(PageRequest.of(page, size), usuarioLogadoId);
+    public Page buscarTodas(PageRequest pageable, DietaFiltros filtros) {
+        filtros.setUsuarioId(usuarioService.getUsuarioAutenticado().getId());
+        return dietaRepository.findAll(filtros.toPredicate().build(), pageable);
     }
 }

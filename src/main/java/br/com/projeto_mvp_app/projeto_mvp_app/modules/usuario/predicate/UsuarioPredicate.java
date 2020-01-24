@@ -1,4 +1,4 @@
-package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto;
+package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.predicate;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.config.PredicateBase;
 

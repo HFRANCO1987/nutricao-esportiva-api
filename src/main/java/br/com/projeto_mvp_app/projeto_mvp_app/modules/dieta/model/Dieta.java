@@ -2,6 +2,8 @@ package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,12 +27,14 @@ public class Dieta {
     private Integer id;
 
     @Column(name = "DATA_CADASTRO", nullable = false, updatable = false)
+    @JsonFormat(pattern = "dd/MM/yyyy hh:mm:ss")
     private LocalDateTime dataCadastro;
 
     @Column(name = "DESCRICAO", nullable = false)
     private String descricao;
 
     @JoinColumn(name = "FK_USUARIO", nullable = false)
+    @JsonIgnore
     @ManyToOne
     private Usuario usuario;
 

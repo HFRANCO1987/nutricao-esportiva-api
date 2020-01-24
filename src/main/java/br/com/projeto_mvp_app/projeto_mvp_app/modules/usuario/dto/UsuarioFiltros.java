@@ -1,5 +1,6 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto;
 
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.predicate.UsuarioPredicate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

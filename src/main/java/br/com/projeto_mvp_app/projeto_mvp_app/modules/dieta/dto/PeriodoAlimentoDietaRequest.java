@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -12,7 +14,5 @@ import lombok.NoArgsConstructor;
 public class PeriodoAlimentoDietaRequest {
 
     private Integer dietaId;
-    private Integer alimentoId;
-    private Integer periodoId;
-
+    List<PeriodoAlimentoRequestList> periodosAlimentos;
 }

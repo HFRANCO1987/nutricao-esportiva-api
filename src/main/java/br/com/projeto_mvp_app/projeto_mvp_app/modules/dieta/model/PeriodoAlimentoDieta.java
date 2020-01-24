@@ -1,6 +1,6 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model;
 
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.PeriodoAlimentoDietaRequest;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.PeriodoAlimentoRequestList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,11 +34,11 @@ public class PeriodoAlimentoDieta {
     @ManyToOne
     private Alimento alimento;
 
-    public static PeriodoAlimentoDieta of(PeriodoAlimentoDietaRequest request) {
+    public static PeriodoAlimentoDieta of(Integer dietaId, PeriodoAlimentoRequestList request) {
         return PeriodoAlimentoDieta
             .builder()
             .alimento(new Alimento(request.getAlimentoId()))
-            .dieta(new Dieta(request.getDietaId()))
+            .dieta(new Dieta(dietaId))
             .periodo(new Periodo(request.getPeriodoId()))
             .build();
     }
