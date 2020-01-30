@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,16 +24,6 @@ public class UsuarioController {
     @GetMapping
     public Page<Usuario> getUsuarios(PageRequest pageable, UsuarioFiltros usuarioFiltros) {
         return usuarioService.getUsuarios(pageable, usuarioFiltros);
-    }
-
-    @GetMapping("/custom")
-    public Page<UsuarioResponse> getUsuariosCustom(PageRequest pageable, UsuarioFiltros usuarioFiltros) {
-        return usuarioService.getUsuariosCustom(pageable, usuarioFiltros);
-    }
-
-    @GetMapping("page")
-    public List<Usuario> getUsuariosPageableQueryDsl(PageRequest pageable, UsuarioFiltros usuarioFiltros) {
-        return usuarioService.getUsuariosPageableQueryDsl(pageable, usuarioFiltros);
     }
 
     @GetMapping("/check-session")
@@ -55,8 +44,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/get-token")
-    public String getAuthorizationToken(@RequestHeader Map<String, String> headers) {
-        return headers.get(AUTHORIZATION).replace("Bearer ", "");
+    public TokenResponse getAuthorizationToken(@RequestHeader Map<String, String> headers) {
+        return new TokenResponse(headers.get(AUTHORIZATION));
     }
 
     @GetMapping("/usuario-autenticado")

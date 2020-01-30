@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado.of;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.exception.UsuarioException.*;
@@ -30,6 +29,8 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @Service
 @Slf4j
 public class UsuarioService {
+
+    private static final String ANONYMOUS_USER = "anonymousUser";
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -127,19 +128,11 @@ public class UsuarioService {
 
     public boolean existeUsuarioAutenticado() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        return !isEmpty(authentication) && !authentication.getName().equals("anonymousUser");
+        return !isEmpty(authentication) && !authentication.getName().equals(ANONYMOUS_USER);
     }
 
     public Page<Usuario> getUsuarios(PageRequest pageable, UsuarioFiltros filtros) {
         return usuarioRepository.findAll(filtros.toPredicate().build(), pageable);
-    }
-
-    public Page<UsuarioResponse> getUsuariosCustom(PageRequest pageable, UsuarioFiltros filtros) {
-        return usuarioRepository.findAll(filtros.toPredicate().build(), pageable).map(UsuarioResponse::of);
-    }
-
-    public List<Usuario> getUsuariosPageableQueryDsl(PageRequest pageable, UsuarioFiltros filtros) {
-        return usuarioRepository.findAllPredicatePageable(pageable, filtros.toPredicate().build());
     }
 
     public UsuarioPesoAlturaResponse buscarUsuarioComHistoricoDePesoEAltura() {
