@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +24,15 @@ public class AlimentoService {
 
     public Page buscarTodos(PageRequest pageable, AlimentoFiltros filtros) {
         return alimentoRepository.findAll(filtros.toPredicate().build(), pageable).map(AlimentoResponse::of);
+    }
+
+    public List<AlimentoResponse> buscarTodosSemPaginacao(AlimentoFiltros filtros) {
+        var alimentos = alimentoRepository.findAll(filtros.toPredicate().build());
+        var alimentosList = new ArrayList<AlimentoResponse>();
+        alimentos.forEach(alimento -> {
+            alimentosList.add(AlimentoResponse.of(alimento));
+        });
+        return alimentosList;
     }
 
     public AlimentoResponse buscarPorId(Integer id) {

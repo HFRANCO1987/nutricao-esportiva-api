@@ -7,7 +7,10 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Categoria;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.service.AlimentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -21,6 +24,11 @@ public class AlimentoController {
     @GetMapping
     public Page buscarAlimentos(PageRequest pageable, AlimentoFiltros filtros) {
         return alimentoService.buscarTodos(pageable, filtros);
+    }
+
+    @GetMapping("/all")
+    public List<AlimentoResponse> buscarAlimentosSemPaginacao(AlimentoFiltros filtros) {
+        return alimentoService.buscarTodosSemPaginacao(filtros);
     }
 
     @GetMapping("{id}")
