@@ -97,4 +97,9 @@ public class DietaService {
         filtros.setUsuarioId(usuarioService.getUsuarioAutenticado().getId());
         return dietaRepository.findAll(filtros.toPredicate().build(), pageable);
     }
+
+    public Iterable buscarTodasSemPaginacao(DietaFiltros filtros) {
+        filtros.setUsuarioId(usuarioService.getUsuarioAutenticado().getId());
+        return dietaRepository.findAll(filtros.toPredicate().build());
+    }
 }

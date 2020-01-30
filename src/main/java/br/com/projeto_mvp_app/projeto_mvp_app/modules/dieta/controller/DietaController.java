@@ -39,4 +39,9 @@ public class DietaController {
     public Page buscarTodas(PageRequest pageable, DietaFiltros filtros) {
         return dietaService.buscarTodas(pageable, filtros);
     }
+
+    @GetMapping("/all")
+    public Iterable buscarTodas(DietaFiltros filtros) {
+        return dietaService.buscarTodasSemPaginacao(filtros);
+    }
 }
