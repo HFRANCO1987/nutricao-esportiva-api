@@ -2,10 +2,7 @@ package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.service;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.config.exception.ValidacaoException;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.dto.PageRequest;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaFiltros;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaRequest;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaResponse;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.PeriodoAlimentoDietaRequest;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.*;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Dieta;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Periodo;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.PeriodoAlimentoDieta;
@@ -20,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -109,5 +107,35 @@ public class DietaService {
 
     public List<Periodo> buscarPeriodos() {
         return periodoRepository.findAll();
+    }
+
+    public DietaCompletaResponse buscarDietaCompleta(Integer id) {
+        var usuarioAutenticado = usuarioService.getUsuarioAutenticado();
+        var dieta = dietaRepository.findByIdAndUsuarioId(id, usuarioAutenticado.getId())
+            .orElseThrow(() -> DIETA_NAO_ENCONTRADA_EXCEPTION);
+        return DietaCompletaResponse.of(dieta, criarResponseDePeriodos(dieta.getId(),
+            buscarPeriodosDaDieta(dieta.getId())));
+    }
+
+    private Set<Periodo> buscarPeriodosDaDieta(Integer dietaId) {
+        return periodoAlimentoDietaRepository.findByDietaIdOrderByPeriodoId(dietaId)
+            .stream()
+            .map(PeriodoAlimentoDieta::getPeriodo)
+            .collect(Collectors.toSet());
+    }
+
+    private List<AlimentoResponse> buscarAlimentosPorDietaEPeriodo(Integer dietaId, Integer periodoId) {
+        return periodoAlimentoDietaRepository.findByDietaIdAndPeriodoId(dietaId, periodoId)
+            .stream()
+            .map(alimento -> AlimentoResponse.of(alimento.getAlimento()))
+            .collect(Collectors.toList());
+    }
+
+    private List<PeriodosAlimentosResponse> criarResponseDePeriodos(Integer dietaId, Set<Periodo> periodosDaDieta) {
+        return periodosDaDieta
+            .stream()
+            .map(periodo -> PeriodosAlimentosResponse.of(periodo,
+                buscarAlimentosPorDietaEPeriodo(dietaId, periodo.getId())))
+            .collect(Collectors.toList());
     }
 }

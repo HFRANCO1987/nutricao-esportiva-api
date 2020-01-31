@@ -9,6 +9,10 @@ public interface PeriodoAlimentoDietaRepository extends JpaRepository<PeriodoAli
 
     List<PeriodoAlimentoDieta> findByDietaId(Integer dietaId);
 
+    List<PeriodoAlimentoDieta> findByDietaIdOrderByPeriodoId(Integer dietaId);
+
+    List<PeriodoAlimentoDieta> findByDietaIdAndPeriodoId(Integer dietaId, Integer periodoId);
+
     Boolean existsByDietaId(Integer dietaId);
 
     void deleteByDietaId(Integer dietaId);
