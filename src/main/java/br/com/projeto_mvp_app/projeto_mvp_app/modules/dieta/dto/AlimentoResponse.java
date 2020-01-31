@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AlimentoResponse {
 
+    private Integer id;
     private String descricao;
     private String categoria;
     private AlimentoInformacoes informacoes;
@@ -19,6 +20,7 @@ public class AlimentoResponse {
     public static AlimentoResponse of(Alimento alimento) {
         return AlimentoResponse
             .builder()
+            .id(alimento.getId())
             .descricao(alimento.getDescricao())
             .categoria(alimento.getCategoria().getDescricao())
             .informacoes(AlimentoInformacoes.of(alimento))

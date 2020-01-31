@@ -7,6 +7,7 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaResponse;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.PeriodoAlimentoDietaRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Dieta;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Periodo;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.PeriodoAlimentoDieta;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.AlimentoRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.DietaRepository;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -98,8 +100,14 @@ public class DietaService {
         return dietaRepository.findAll(filtros.toPredicate().build(), pageable);
     }
 
-    public Iterable buscarTodasSemPaginacao(DietaFiltros filtros) {
+    public List<Dieta> buscarTodasSemPaginacao(DietaFiltros filtros) {
         filtros.setUsuarioId(usuarioService.getUsuarioAutenticado().getId());
-        return dietaRepository.findAll(filtros.toPredicate().build());
+        return StreamSupport
+            .stream(dietaRepository.findAll(filtros.toPredicate().build()).spliterator(), false)
+            .collect(Collectors.toList());
+    }
+
+    public List<Periodo> buscarPeriodos() {
+        return periodoRepository.findAll();
     }
 }

@@ -7,10 +7,13 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaResponse;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.PeriodoAlimentoDietaRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Dieta;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Periodo;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.service.DietaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/dieta")
@@ -40,8 +43,13 @@ public class DietaController {
         return dietaService.buscarTodas(pageable, filtros);
     }
 
-    @GetMapping("/all")
-    public Iterable buscarTodas(DietaFiltros filtros) {
+    @GetMapping("all")
+    public List<Dieta> buscarTodas(DietaFiltros filtros) {
         return dietaService.buscarTodasSemPaginacao(filtros);
+    }
+
+    @GetMapping("periodos")
+    public List<Periodo> buscarPeriodos() {
+        return dietaService.buscarPeriodos();
     }
 }
