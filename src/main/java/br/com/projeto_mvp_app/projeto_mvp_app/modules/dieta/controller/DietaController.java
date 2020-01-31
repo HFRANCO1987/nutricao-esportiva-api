@@ -2,10 +2,7 @@ package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.controller;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.dto.PageRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.response.SuccessResponseDetails;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaFiltros;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaRequest;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaResponse;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.PeriodoAlimentoDietaRequest;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.*;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Dieta;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Periodo;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.service.DietaService;
@@ -51,5 +48,10 @@ public class DietaController {
     @GetMapping("periodos")
     public List<Periodo> buscarPeriodos() {
         return dietaService.buscarPeriodos();
+    }
+
+    @GetMapping("{id}/completa")
+    public DietaCompletaResponse buscarDietaCompleta(@PathVariable Integer id) {
+        return dietaService.buscarDietaCompleta(id);
     }
 }
