@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -114,7 +115,10 @@ public class DietaService {
         var dieta = dietaRepository.findByIdAndUsuarioId(id, usuarioAutenticado.getId())
             .orElseThrow(() -> DIETA_NAO_ENCONTRADA_EXCEPTION);
         return DietaCompletaResponse.of(dieta, criarResponseDePeriodos(dieta.getId(),
-            buscarPeriodosDaDieta(dieta.getId())));
+            buscarPeriodosDaDieta(dieta.getId()))
+            .stream()
+            .sorted(Comparator.comparingInt(PeriodosAlimentosResponse::getId))
+            .collect(Collectors.toList()));
     }
 
     private Set<Periodo> buscarPeriodosDaDieta(Integer dietaId) {
