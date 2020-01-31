@@ -6,7 +6,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.Optional;
 
-public interface DietaRepository extends JpaRepository<Dieta, Integer>, QuerydslPredicateExecutor {
+public interface DietaRepository extends JpaRepository<Dieta, Integer>, QuerydslPredicateExecutor<Dieta> {
 
     Optional<Dieta> findByIdAndUsuarioId(Integer id, Integer usuarioId);
 
