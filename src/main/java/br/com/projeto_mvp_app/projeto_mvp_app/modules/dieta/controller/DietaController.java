@@ -54,4 +54,9 @@ public class DietaController {
     public DietaCompletaResponse buscarDietaCompleta(@PathVariable Integer id) {
         return dietaService.buscarDietaCompleta(id);
     }
+
+    @GetMapping("atual")
+    public DietaCompletaResponse buscarDietaCompletaAtual() {
+        return dietaService.buscarDietaAtualCompleta();
+    }
 }

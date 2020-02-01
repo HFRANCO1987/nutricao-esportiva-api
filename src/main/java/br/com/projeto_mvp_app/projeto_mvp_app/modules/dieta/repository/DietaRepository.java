@@ -10,5 +10,7 @@ public interface DietaRepository extends JpaRepository<Dieta, Integer>, Querydsl
 
     Optional<Dieta> findByIdAndUsuarioId(Integer id, Integer usuarioId);
 
+    Optional<Dieta> findFirstByUsuarioIdOrderByDataCadastroDesc(Integer usuarioId);
+
     Boolean existsByIdAndUsuarioId(Integer id, Integer usuarioId);
 }
