@@ -112,13 +112,17 @@ public class DietaService {
 
     public DietaCompletaResponse buscarDietaCompleta(Integer id) {
         var usuarioAutenticado = usuarioService.getUsuarioAutenticado();
-        var dieta = dietaRepository.findByIdAndUsuarioId(id, usuarioAutenticado.getId())
-            .orElseThrow(() -> DIETA_NAO_ENCONTRADA_EXCEPTION);
-        return DietaCompletaResponse.of(dieta, criarResponseDePeriodos(dieta.getId(),
-            buscarPeriodosDaDieta(dieta.getId()))
-            .stream()
-            .sorted(Comparator.comparingInt(PeriodosAlimentosResponse::getId))
-            .collect(Collectors.toList()));
+        var dieta = dietaRepository.findByIdAndUsuarioId(id, usuarioAutenticado.getId());
+        if (dieta.isEmpty()) {
+            return new DietaCompletaResponse();
+        } else {
+            var dietaAtual = dieta.get();
+            return DietaCompletaResponse.of(dietaAtual, criarResponseDePeriodos(dietaAtual.getId(),
+                buscarPeriodosDaDieta(dietaAtual.getId()))
+                .stream()
+                .sorted(Comparator.comparingInt(PeriodosAlimentosResponse::getId))
+                .collect(Collectors.toList()));
+        }
     }
 
     private Set<Periodo> buscarPeriodosDaDieta(Integer dietaId) {
@@ -141,5 +145,20 @@ public class DietaService {
             .map(periodo -> PeriodosAlimentosResponse.of(periodo,
                 buscarAlimentosPorDietaEPeriodo(dietaId, periodo.getId())))
             .collect(Collectors.toList());
+    }
+
+    public DietaCompletaResponse buscarDietaAtualCompleta() {
+        var usuarioAutenticado = usuarioService.getUsuarioAutenticado();
+        var dieta = dietaRepository.findFirstByUsuarioIdOrderByDataCadastroDesc(usuarioAutenticado.getId());
+        if (dieta.isEmpty()) {
+            return new DietaCompletaResponse();
+        } else {
+            var dietaAtual = dieta.get();
+            return DietaCompletaResponse.of(dietaAtual, criarResponseDePeriodos(dietaAtual.getId(),
+                buscarPeriodosDaDieta(dietaAtual.getId()))
+                .stream()
+                .sorted(Comparator.comparingInt(PeriodosAlimentosResponse::getId))
+                .collect(Collectors.toList()));
+        }
     }
 }
