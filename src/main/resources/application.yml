@@ -10,8 +10,8 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    jdbc-url: jdbc:postgresql://sqlvhnegrisoli.ddns.net:5432/nutricao_esportiva
-#    jdbc-url: jdbc:postgresql://localhost:5432/nutricao_esportiva
+#    jdbc-url: jdbc:postgresql://sqlvhnegrisoli.ddns.net:5432/nutricao_esportiva
+    jdbc-url: jdbc:postgresql://localhost:5432/nutricao_esportiva
     username: postgres
     password: 1y5h8j
     initialization-mode: always
@@ -34,8 +34,8 @@ spring:
           lob.non_contextual_creation: true
 
   redis:
-    host: sqlvhnegrisoli.ddns.net
-#    host: localhost
+#    host: sqlvhnegrisoli.ddns.net
+    host: localhost
     port: 6379
     pool:
       max-active: 120

@@ -16,9 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -118,18 +116,8 @@ public class DietaService {
         } else {
             var dietaAtual = dieta.get();
             return DietaCompletaResponse.of(dietaAtual, criarResponseDePeriodos(dietaAtual.getId(),
-                buscarPeriodosDaDieta(dietaAtual.getId()))
-                .stream()
-                .sorted(Comparator.comparingInt(PeriodosAlimentosResponse::getId))
-                .collect(Collectors.toList()));
+                buscarPeriodos()));
         }
-    }
-
-    private Set<Periodo> buscarPeriodosDaDieta(Integer dietaId) {
-        return periodoAlimentoDietaRepository.findByDietaIdOrderByPeriodoId(dietaId)
-            .stream()
-            .map(PeriodoAlimentoDieta::getPeriodo)
-            .collect(Collectors.toSet());
     }
 
     private List<AlimentoResponse> buscarAlimentosPorDietaEPeriodo(Integer dietaId, Integer periodoId) {
@@ -139,7 +127,7 @@ public class DietaService {
             .collect(Collectors.toList());
     }
 
-    private List<PeriodosAlimentosResponse> criarResponseDePeriodos(Integer dietaId, Set<Periodo> periodosDaDieta) {
+    private List<PeriodosAlimentosResponse> criarResponseDePeriodos(Integer dietaId, List<Periodo> periodosDaDieta) {
         return periodosDaDieta
             .stream()
             .map(periodo -> PeriodosAlimentosResponse.of(periodo,
@@ -155,10 +143,7 @@ public class DietaService {
         } else {
             var dietaAtual = dieta.get();
             return DietaCompletaResponse.of(dietaAtual, criarResponseDePeriodos(dietaAtual.getId(),
-                buscarPeriodosDaDieta(dietaAtual.getId()))
-                .stream()
-                .sorted(Comparator.comparingInt(PeriodosAlimentosResponse::getId))
-                .collect(Collectors.toList()));
+                buscarPeriodos()));
         }
     }
 }
