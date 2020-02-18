@@ -20,17 +20,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.enums.EBoolean.V;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado.of;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.exception.UsuarioException.*;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario.of;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
-@Service
 @Slf4j
+@Service
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class UsuarioService {
 
     private static final String ANONYMOUS_USER = "anonymousUser";
+    private static final String FORMATO_DATA = "dd/MM/yyyy";
+    private static final Integer UMA_SEMANA = 1;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -138,8 +147,11 @@ public class UsuarioService {
     public UsuarioPesoAlturaResponse buscarUsuarioComHistoricoDePesoEAltura() {
         var usuarioId = getUsuarioAutenticado().getId();
         return UsuarioPesoAlturaResponse.of(usuarioRepository.findById(usuarioId)
-                .orElseThrow(USUARIO_NAO_ENCONTRADO::getException),
-            pesoAlturaRepository.findByUsuarioIdOrderByDataCadastroDesc(usuarioId));
+                .orElseThrow(USUARIO_NAO_ENCONTRADO::getException), retornarHistoricoPorUsuarioId(usuarioId));
+    }
+
+    public List<PesoAltura> retornarHistoricoPorUsuarioId(Integer usuarioId) {
+        return pesoAlturaRepository.findByUsuarioIdOrderByDataCadastroDesc(usuarioId);
     }
 
     @Transactional
@@ -160,8 +172,9 @@ public class UsuarioService {
         var usuario = usuarioRepository.findById(getUsuarioAutenticado().getId())
             .orElseThrow(USUARIO_NAO_ENCONTRADO::getException);
         var historico = buscarUsuarioComHistoricoDePesoEAltura();
-        return anterior.map(pesoAnterior -> UsuarioAnalisePesoResponse.of(usuario, atual, pesoAnterior, historico))
-            .orElseGet(() -> UsuarioAnalisePesoResponse.of(usuario, atual, atual, historico));
+        var analise = buscarAnalisePesoAltura();
+        return anterior.map(pesoAnterior -> UsuarioAnalisePesoResponse.of(usuario, atual, pesoAnterior, historico, analise))
+            .orElseGet(() -> UsuarioAnalisePesoResponse.of(usuario, atual, atual, historico, analise));
     }
 
     private void tratarHistoricoDePesoAltura(Integer usuarioId) {
@@ -172,6 +185,35 @@ public class UsuarioService {
 
     public UsuarioAnalisePesoResponse consultarAnalisePesoAltura() {
         return tratarAnalisePeso(pesoAlturaRepository.findByUsuarioIdAndPesoAlturaAtual(getUsuarioAutenticado()
-            .getId(), EBoolean.V).orElseThrow(() -> new ValidacaoException("O peso atual não foi encontrado.")));
+            .getId(), V).orElseThrow(() -> new ValidacaoException("O peso atual não foi encontrado.")));
+    }
+
+    public UsuarioUltimoPesoResponse verificarPesagemNaUltimaSemana() {
+        var usuarioLogado = getUsuarioAutenticado();
+        var response = new UsuarioUltimoPesoResponse(usuarioLogado.getId(), usuarioLogado.getNome());
+        var peso = pesoAlturaRepository
+            .findTop1ByUsuarioIdAndPesoAlturaAtualOrderByDataCadastroDesc(usuarioLogado.getId(), V)
+            .orElseThrow(USUARIO_PESO_NAO_ENCONTRADO::getException);
+        if (ChronoUnit.WEEKS.between(peso.getDataCadastro(), LocalDateTime.now()) >= UMA_SEMANA) {
+            response.setMensagem("Você não se pesa há mais de uma semana, vamos se pesar?");
+        } else {
+            response.setMensagem("A última vez que você se pesou foi em "
+                + peso.getDataCadastro().toLocalDate().format(DateTimeFormatter.ofPattern(FORMATO_DATA))
+                + ", e seu peso era " + peso.getPeso() + "kg.");
+        }
+        return response;
+    }
+
+    public List<AnalisePesoAlturaResponse> buscarAnalisePesoAltura() {
+        var usuarioLogado = getUsuarioAutenticado();
+        var historico = retornarHistoricoPorUsuarioId(usuarioLogado.getId());
+        return IntStream
+            .range(0, historico.size())
+            .mapToObj(i -> i == historico.size() - 1
+                ? AnalisePesoAlturaResponse.of(historico.get(i), null, true)
+                : !isEmpty(historico.get(i + 1))
+                ? AnalisePesoAlturaResponse.of(historico.get(i), historico.get(i + 1), false)
+                : null)
+            .collect(Collectors.toList());
     }
 }

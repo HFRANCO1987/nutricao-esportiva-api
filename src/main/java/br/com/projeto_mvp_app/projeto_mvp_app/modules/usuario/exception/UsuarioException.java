@@ -13,7 +13,8 @@ public enum UsuarioException {
     USUARIO_DATA_NASCIMENTO_IGUAL_HOJE(
         new ValidacaoException("A data de nascimento não pode ser igual à data de hoje.")),
     USUARIO_DATA_NASCIMENTO_MAIOR_HOJE(
-        new ValidacaoException("A data de nascimento não pode ser superior à data de hoje."));
+        new ValidacaoException("A data de nascimento não pode ser superior à data de hoje.")),
+    USUARIO_PESO_NAO_ENCONTRADO(new ValidacaoException("Não foi encontrado um peso registrado para este usuário."));
 
     @Getter
     private ValidacaoException exception;

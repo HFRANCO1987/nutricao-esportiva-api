@@ -68,4 +68,9 @@ public class UsuarioController {
     public UsuarioAnalisePesoResponse consultarAnalisePesoAltura() {
         return usuarioService.consultarAnalisePesoAltura();
     }
+
+    @GetMapping("ultima-pesagem")
+    public UsuarioUltimoPesoResponse verificarPesagemNaUltimaSemana() {
+        return usuarioService.verificarPesagemNaUltimaSemana();
+    }
 }
