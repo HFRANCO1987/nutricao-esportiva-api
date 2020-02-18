@@ -20,17 +20,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.enums.EBoolean.V;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado.of;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.exception.UsuarioException.*;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario.of;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
-@Service
 @Slf4j
+@Service
+@SuppressWarnings("PMD.TooManyStaticImports")
 public class UsuarioService {
 
     private static final String ANONYMOUS_USER = "anonymousUser";
+    private static final String FORMATO_DATA = "dd/MM/yyyy";
+    private static final Integer UMA_SEMANA = 1;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -172,6 +178,22 @@ public class UsuarioService {
 
     public UsuarioAnalisePesoResponse consultarAnalisePesoAltura() {
         return tratarAnalisePeso(pesoAlturaRepository.findByUsuarioIdAndPesoAlturaAtual(getUsuarioAutenticado()
-            .getId(), EBoolean.V).orElseThrow(() -> new ValidacaoException("O peso atual não foi encontrado.")));
+            .getId(), V).orElseThrow(() -> new ValidacaoException("O peso atual não foi encontrado.")));
+    }
+
+    public UsuarioUltimoPesoResponse verificarPesagemNaUltimaSemana() {
+        var usuarioLogado = getUsuarioAutenticado();
+        var response = new UsuarioUltimoPesoResponse(usuarioLogado.getId(), usuarioLogado.getNome());
+        var peso = pesoAlturaRepository
+            .findTop1ByUsuarioIdAndPesoAlturaAtualOrderByDataCadastroDesc(usuarioLogado.getId(), V)
+            .orElseThrow(USUARIO_PESO_NAO_ENCONTRADO::getException);
+        if (ChronoUnit.WEEKS.between(peso.getDataCadastro(), LocalDateTime.now()) >= UMA_SEMANA) {
+            response.setMensagem("Você não se pesa há mais de uma semana, vamos se pesar?");
+        } else {
+            response.setMensagem("A última vez que você se pesou foi em "
+                + peso.getDataCadastro().toLocalDate().format(DateTimeFormatter.ofPattern(FORMATO_DATA))
+                + ", e seu peso era " + peso.getPeso() + "kg.");
+        }
+        return response;
     }
 }
