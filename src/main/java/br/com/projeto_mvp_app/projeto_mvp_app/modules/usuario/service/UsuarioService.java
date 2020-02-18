@@ -22,6 +22,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.enums.EBoolean.V;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado.of;
@@ -144,8 +147,11 @@ public class UsuarioService {
     public UsuarioPesoAlturaResponse buscarUsuarioComHistoricoDePesoEAltura() {
         var usuarioId = getUsuarioAutenticado().getId();
         return UsuarioPesoAlturaResponse.of(usuarioRepository.findById(usuarioId)
-                .orElseThrow(USUARIO_NAO_ENCONTRADO::getException),
-            pesoAlturaRepository.findByUsuarioIdOrderByDataCadastroDesc(usuarioId));
+                .orElseThrow(USUARIO_NAO_ENCONTRADO::getException), retornarHistoricoPorUsuarioId(usuarioId));
+    }
+
+    public List<PesoAltura> retornarHistoricoPorUsuarioId(Integer usuarioId) {
+        return pesoAlturaRepository.findByUsuarioIdOrderByDataCadastroDesc(usuarioId);
     }
 
     @Transactional
@@ -166,8 +172,9 @@ public class UsuarioService {
         var usuario = usuarioRepository.findById(getUsuarioAutenticado().getId())
             .orElseThrow(USUARIO_NAO_ENCONTRADO::getException);
         var historico = buscarUsuarioComHistoricoDePesoEAltura();
-        return anterior.map(pesoAnterior -> UsuarioAnalisePesoResponse.of(usuario, atual, pesoAnterior, historico))
-            .orElseGet(() -> UsuarioAnalisePesoResponse.of(usuario, atual, atual, historico));
+        var analise = buscarAnalisePesoAltura();
+        return anterior.map(pesoAnterior -> UsuarioAnalisePesoResponse.of(usuario, atual, pesoAnterior, historico, analise))
+            .orElseGet(() -> UsuarioAnalisePesoResponse.of(usuario, atual, atual, historico, analise));
     }
 
     private void tratarHistoricoDePesoAltura(Integer usuarioId) {
@@ -195,5 +202,18 @@ public class UsuarioService {
                 + ", e seu peso era " + peso.getPeso() + "kg.");
         }
         return response;
+    }
+
+    public List<AnalisePesoAlturaResponse> buscarAnalisePesoAltura() {
+        var usuarioLogado = getUsuarioAutenticado();
+        var historico = retornarHistoricoPorUsuarioId(usuarioLogado.getId());
+        return IntStream
+            .range(0, historico.size())
+            .mapToObj(i -> i == historico.size() - 1
+                ? AnalisePesoAlturaResponse.of(historico.get(i), null, true)
+                : !isEmpty(historico.get(i + 1))
+                ? AnalisePesoAlturaResponse.of(historico.get(i), historico.get(i + 1), false)
+                : null)
+            .collect(Collectors.toList());
     }
 }
