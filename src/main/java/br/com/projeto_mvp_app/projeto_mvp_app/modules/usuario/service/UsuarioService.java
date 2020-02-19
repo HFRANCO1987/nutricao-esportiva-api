@@ -12,8 +12,6 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.repository.Usuario
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +35,6 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @SuppressWarnings("PMD.TooManyStaticImports")
 public class UsuarioService {
 
-    private static final String ANONYMOUS_USER = "anonymousUser";
     private static final String FORMATO_DATA = "dd/MM/yyyy";
     private static final Integer UMA_SEMANA = 1;
 
@@ -47,6 +44,8 @@ public class UsuarioService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private PesoAlturaRepository pesoAlturaRepository;
+    @Autowired
+    private AutenticacaoService autenticacaoService;
 
     public void save(UsuarioRequest usuarioRequest) {
         var usuario = of(usuarioRequest);
@@ -110,7 +109,7 @@ public class UsuarioService {
     @Transactional
     public UsuarioAutenticado getUsuarioAutenticadoAtualizaUltimaData() {
         var usuarioAtualizado = usuarioRepository
-            .findById(getUsuarioAutenticado().getId())
+            .findById(autenticacaoService.getUsuarioAutenticado().getId())
             .orElseThrow(USUARIO_NAO_ENCONTRADO::getException);
         return of(atualizarUltimoAcesso(usuarioAtualizado));
     }
@@ -121,31 +120,12 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public UsuarioAutenticado getUsuarioAutenticado() {
-        var email = "";
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        try {
-            if (principal instanceof UserDetails) {
-                email = ((UserDetails)principal).getUsername();
-            }
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
-            throw USUARIO_SEM_SESSAO.getException();
-        }
-        return of(usuarioRepository.findByEmail(email).orElseThrow(USUARIO_NAO_ENCONTRADO::getException));
-    }
-
-    public boolean existeUsuarioAutenticado() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        return !isEmpty(authentication) && !authentication.getName().equals(ANONYMOUS_USER);
-    }
-
     public Page<Usuario> getUsuarios(PageRequest pageable, UsuarioFiltros filtros) {
         return usuarioRepository.findAll(filtros.toPredicate().build(), pageable);
     }
 
     public UsuarioPesoAlturaResponse buscarUsuarioComHistoricoDePesoEAltura() {
-        var usuarioId = getUsuarioAutenticado().getId();
+        var usuarioId = autenticacaoService.getUsuarioAutenticado().getId();
         return UsuarioPesoAlturaResponse.of(usuarioRepository.findById(usuarioId)
                 .orElseThrow(USUARIO_NAO_ENCONTRADO::getException), retornarHistoricoPorUsuarioId(usuarioId));
     }
@@ -156,8 +136,8 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioAnalisePesoResponse tratarUsuarioPeso(Double peso, Double altura, Integer usuarioId) {
-        if (existeUsuarioAutenticado()) {
-            var usuarioLogadoId = getUsuarioAutenticado().getId();
+        if (autenticacaoService.existeUsuarioAutenticado()) {
+            var usuarioLogadoId = autenticacaoService.getUsuarioAutenticado().getId();
             tratarHistoricoDePesoAltura(usuarioLogadoId);
             return tratarAnalisePeso(pesoAlturaRepository.save(PesoAltura.of(peso, altura, usuarioLogadoId)));
         } else {
@@ -169,7 +149,7 @@ public class UsuarioService {
     private UsuarioAnalisePesoResponse tratarAnalisePeso(PesoAltura atual) {
         var anterior = pesoAlturaRepository.findTop1ByUsuarioIdAndPesoAlturaAtualOrderByDataCadastroDesc(
             atual.getUsuario().getId(), EBoolean.F);
-        var usuario = usuarioRepository.findById(getUsuarioAutenticado().getId())
+        var usuario = usuarioRepository.findById(autenticacaoService.getUsuarioAutenticado().getId())
             .orElseThrow(USUARIO_NAO_ENCONTRADO::getException);
         var historico = buscarUsuarioComHistoricoDePesoEAltura();
         var analise = buscarAnalisePesoAltura();
@@ -184,12 +164,13 @@ public class UsuarioService {
     }
 
     public UsuarioAnalisePesoResponse consultarAnalisePesoAltura() {
-        return tratarAnalisePeso(pesoAlturaRepository.findByUsuarioIdAndPesoAlturaAtual(getUsuarioAutenticado()
-            .getId(), V).orElseThrow(() -> new ValidacaoException("O peso atual não foi encontrado.")));
+        return tratarAnalisePeso(pesoAlturaRepository.findByUsuarioIdAndPesoAlturaAtual(
+            autenticacaoService.getUsuarioAutenticado().getId(), V)
+            .orElseThrow(() -> new ValidacaoException("O peso atual não foi encontrado.")));
     }
 
     public UsuarioUltimoPesoResponse verificarPesagemNaUltimaSemana() {
-        var usuarioLogado = getUsuarioAutenticado();
+        var usuarioLogado = autenticacaoService.getUsuarioAutenticado();
         var response = new UsuarioUltimoPesoResponse(usuarioLogado.getId(), usuarioLogado.getNome());
         var peso = pesoAlturaRepository
             .findTop1ByUsuarioIdAndPesoAlturaAtualOrderByDataCadastroDesc(usuarioLogado.getId(), V)
@@ -205,7 +186,7 @@ public class UsuarioService {
     }
 
     public List<AnalisePesoAlturaResponse> buscarAnalisePesoAltura() {
-        var usuarioLogado = getUsuarioAutenticado();
+        var usuarioLogado = autenticacaoService.getUsuarioAutenticado();
         var historico = retornarHistoricoPorUsuarioId(usuarioLogado.getId());
         return IntStream
             .range(0, historico.size())

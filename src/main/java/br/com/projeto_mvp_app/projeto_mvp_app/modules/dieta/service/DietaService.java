@@ -10,7 +10,7 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.AlimentoR
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.DietaRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.PeriodoAlimentoDietaRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.PeriodoRepository;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.AutenticacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -38,11 +38,11 @@ public class DietaService {
     @Autowired
     private AlimentoRepository alimentoRepository;
     @Autowired
-    private UsuarioService usuarioService;
+    private AutenticacaoService autenticacaoService;
 
     @Transactional
     public Dieta salvar(DietaRequest request) {
-        var usuarioLogado = usuarioService.getUsuarioAutenticado();
+        var usuarioLogado = autenticacaoService.getUsuarioAutenticado();
         return dietaRepository.save(Dieta.of(request, usuarioLogado.getId()));
     }
 
@@ -64,7 +64,7 @@ public class DietaService {
     }
 
     private void validarPermissaoDoUsuarioSobreDieta(Integer dietaId) {
-        var usuarioLogadoId = usuarioService.getUsuarioAutenticado().getId();
+        var usuarioLogadoId = autenticacaoService.getUsuarioAutenticado().getId();
         if (!dietaRepository.existsByIdAndUsuarioId(dietaId, usuarioLogadoId)) {
             throw new ValidacaoException("Você não tem permissão para alterar essa dieta.");
         }
@@ -85,7 +85,7 @@ public class DietaService {
     }
 
     public DietaResponse buscarDietaComDadosCompletos(Integer id) {
-        var usuarioLogadoId = usuarioService.getUsuarioAutenticado().getId();
+        var usuarioLogadoId = autenticacaoService.getUsuarioAutenticado().getId();
         var dieta = dietaRepository.findByIdAndUsuarioId(id, usuarioLogadoId)
             .orElseThrow(() -> DIETA_NAO_ENCONTRADA_EXCEPTION);
         var alimentosPeriodosDaDieta = periodoAlimentoDietaRepository.findByDietaId(dieta.getId());
@@ -93,12 +93,12 @@ public class DietaService {
     }
 
     public Page buscarTodas(PageRequest pageable, DietaFiltros filtros) {
-        filtros.setUsuarioId(usuarioService.getUsuarioAutenticado().getId());
+        filtros.setUsuarioId(autenticacaoService.getUsuarioAutenticado().getId());
         return dietaRepository.findAll(filtros.toPredicate().build(), pageable);
     }
 
     public List<Dieta> buscarTodasSemPaginacao(DietaFiltros filtros) {
-        filtros.setUsuarioId(usuarioService.getUsuarioAutenticado().getId());
+        filtros.setUsuarioId(autenticacaoService.getUsuarioAutenticado().getId());
         return StreamSupport
             .stream(dietaRepository.findAll(filtros.toPredicate().build()).spliterator(), false)
             .collect(Collectors.toList());
@@ -109,7 +109,7 @@ public class DietaService {
     }
 
     public DietaCompletaResponse buscarDietaCompleta(Integer id) {
-        var usuarioAutenticado = usuarioService.getUsuarioAutenticado();
+        var usuarioAutenticado = autenticacaoService.getUsuarioAutenticado();
         var dieta = dietaRepository.findByIdAndUsuarioId(id, usuarioAutenticado.getId());
         if (dieta.isEmpty()) {
             return new DietaCompletaResponse();
@@ -136,7 +136,7 @@ public class DietaService {
     }
 
     public DietaCompletaResponse buscarDietaAtualCompleta() {
-        var usuarioAutenticado = usuarioService.getUsuarioAutenticado();
+        var usuarioAutenticado = autenticacaoService.getUsuarioAutenticado();
         var dieta = dietaRepository.findFirstByUsuarioIdOrderByDataCadastroDesc(usuarioAutenticado.getId());
         if (dieta.isEmpty()) {
             return new DietaCompletaResponse();

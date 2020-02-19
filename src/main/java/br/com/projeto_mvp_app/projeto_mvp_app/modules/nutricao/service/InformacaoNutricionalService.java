@@ -4,7 +4,7 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.dto.InformacaoNut
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.model.InformacaoNutricional;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.nutricao.repository.InformacaoNutricionalRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.AutenticacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 public class InformacaoNutricionalService {
 
     @Autowired
-    private UsuarioService usuarioService;
+    private AutenticacaoService autenticacaoService;
     @Autowired
     private InformacaoNutricionalRepository informacaoNutricionalRepository;
 
     public List<InformacaoNutricionalCalculosResponse> getAllInfo() {
-        var usuarioLogado = usuarioService.getUsuarioAutenticado();
+        var usuarioLogado = autenticacaoService.getUsuarioAutenticado();
         return informacaoNutricionalRepository
             .findByUsuarioOrderByDataCadastroInformacaoDesc(new Usuario(usuarioLogado.getId()))
             .stream()
@@ -32,7 +32,7 @@ public class InformacaoNutricionalService {
     public void save(InformacaoNutricional informacaoNutricional) {
         informacaoNutricional.setDataCadastroInformacao(LocalDateTime.now());
         informacaoNutricional.setDataUltimoExame(informacaoNutricional.getDataUltimoExame());
-        informacaoNutricional.setUsuario(new Usuario(usuarioService.getUsuarioAutenticado().getId()));
+        informacaoNutricional.setUsuario(new Usuario(autenticacaoService.getUsuarioAutenticado().getId()));
         informacaoNutricionalRepository.save(informacaoNutricional);
     }
 }
