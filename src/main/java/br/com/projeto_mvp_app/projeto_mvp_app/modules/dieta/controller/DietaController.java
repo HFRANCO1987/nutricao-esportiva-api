@@ -30,6 +30,16 @@ public class DietaController {
         return new SuccessResponseDetails("Os alimentos e períodos foram adicionados à sua dieta!");
     }
 
+    @PostMapping("salvar-alimento")
+    public SuccessResponseDetails salvarAlimentosNaDieta(@RequestBody DietaAlimentoRequest request) {
+        return dietaService.salvarUmAlimentoPeriodoNaDieta(request);
+    }
+
+    @PutMapping("remover-alimento")
+    public SuccessResponseDetails removerAlimentosNaDieta(@RequestBody DietaAlimentoRequest request) {
+        return dietaService.removerUmAlimentoPeriodoNaDieta(request);
+    }
+
     @GetMapping("{id}")
     public DietaResponse buscarDietaComDadosCompletos(@PathVariable Integer id) {
         return dietaService.buscarDietaComDadosCompletos(id);

@@ -4,12 +4,15 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.PeriodoAliment
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PeriodoAlimentoDietaRepository extends JpaRepository<PeriodoAlimentoDieta, Integer> {
 
     List<PeriodoAlimentoDieta> findByDietaId(Integer dietaId);
 
-    List<PeriodoAlimentoDieta> findByDietaIdOrderByPeriodoId(Integer dietaId);
+    void deleteByDietaIdAndPeriodoIdAndAlimentoId(Integer dietaId,
+                                                  Integer periodoId,
+                                                  Integer alimentoId);
 
     List<PeriodoAlimentoDieta> findByDietaIdAndPeriodoId(Integer dietaId, Integer periodoId);
 

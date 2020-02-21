@@ -2,6 +2,7 @@ package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.service;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.config.exception.ValidacaoException;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.dto.PageRequest;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.response.SuccessResponseDetails;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.*;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Dieta;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Periodo;
@@ -145,5 +146,25 @@ public class DietaService {
             return DietaCompletaResponse.of(dietaAtual, criarResponseDePeriodos(dietaAtual.getId(),
                 buscarPeriodos()));
         }
+    }
+
+    @Transactional
+    public SuccessResponseDetails salvarUmAlimentoPeriodoNaDieta(DietaAlimentoRequest request) {
+        validarPermissaoDoUsuarioSobreDieta(request.getDietaId());
+        periodoAlimentoDietaRepository.save(PeriodoAlimentoDieta.of(request));
+        return new SuccessResponseDetails("O alimento foi inserido na dieta com sucesso!");
+    }
+
+    @Transactional
+    public SuccessResponseDetails removerUmAlimentoPeriodoNaDieta(DietaAlimentoRequest request) {
+        var usuarioLogado = autenticacaoService.getUsuarioAutenticado();
+        dietaRepository.findByIdAndUsuarioId(request.getDietaId(), usuarioLogado.getId())
+            .ifPresentOrElse(dieta -> {
+                periodoAlimentoDietaRepository.deleteByDietaIdAndPeriodoIdAndAlimentoId(dieta.getId(),
+                    request.getPeriodoId(), request.getAlimentoId());
+            }, () -> {
+                throw DIETA_NAO_ENCONTRADA_EXCEPTION;
+            });
+        return new SuccessResponseDetails("O alimento foi removido da dieta com sucesso!");
     }
 }
