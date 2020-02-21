@@ -15,6 +15,7 @@ public class AlimentoResponse {
     private Integer id;
     private String descricao;
     private String categoria;
+    private String imagem;
     private AlimentoInformacoes informacoes;
 
     public static AlimentoResponse of(Alimento alimento) {
@@ -23,6 +24,7 @@ public class AlimentoResponse {
             .id(alimento.getId())
             .descricao(alimento.getDescricao())
             .categoria(alimento.getCategoria().getDescricao())
+            .imagem(alimento.getImagem())
             .informacoes(AlimentoInformacoes.of(alimento))
             .build();
     }

@@ -2,7 +2,7 @@ package br.com.projeto_mvp_app.projeto_mvp_app.modules.log.service;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.log.dto.LogRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.log.logMqSender.LogSender;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.AutenticacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.config.Aplicacao.APLICACAO;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.log.enums.ETipoOperacao.ALTERANDO;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.log.enums.ETipoOperacao.CONSULTANDO;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.log.enums.ETipoOperacao.SALVANDO;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.log.enums.ETipoOperacao.REMOVENDO;
-import static br.com.projeto_mvp_app.projeto_mvp_app.modules.log.enums.ETipoOperacao.ALTERANDO;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
@@ -35,13 +35,13 @@ public class LogService {
     );
 
     @Autowired
-    private UsuarioService usuarioService;
+    private AutenticacaoService autenticacaoService;
     @Autowired
     private LogSender logSender;
 
     public void gerarLogUsuario(HttpServletRequest request) {
         if (isUrlValidaParaLog(request.getRequestURI())) {
-            var usuarioLogado = usuarioService.getUsuarioAutenticado();
+            var usuarioLogado = autenticacaoService.getUsuarioAutenticado();
             var log = LogRequest
                 .builder()
                 .dataAcesso(LocalDateTime.now())

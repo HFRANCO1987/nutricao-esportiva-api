@@ -4,6 +4,7 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.dto.PageRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.response.SuccessResponseDetails;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.*;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.AutenticacaoService;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,8 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private AutenticacaoService autenticacaoService;
 
     @GetMapping
     public Page<Usuario> getUsuarios(PageRequest pageable, UsuarioFiltros usuarioFiltros) {
@@ -28,7 +31,7 @@ public class UsuarioController {
 
     @GetMapping("/check-session")
     public String checkSession() {
-        return "O usuário " + usuarioService.getUsuarioAutenticado().getNome() + " está logado.";
+        return "O usuário " + autenticacaoService.getUsuarioAutenticado().getNome() + " está logado.";
     }
 
     @PostMapping("/novo")
@@ -55,7 +58,7 @@ public class UsuarioController {
 
     @GetMapping("/is-authenticated")
     public boolean verificarSeEstaAutenticado() {
-        return usuarioService.existeUsuarioAutenticado();
+        return autenticacaoService.existeUsuarioAutenticado();
     }
 
     @PutMapping("atualizar-peso-altura")
