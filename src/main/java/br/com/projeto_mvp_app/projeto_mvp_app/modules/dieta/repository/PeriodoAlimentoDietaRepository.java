@@ -4,7 +4,6 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.PeriodoAliment
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface PeriodoAlimentoDietaRepository extends JpaRepository<PeriodoAlimentoDieta, Integer> {
 

@@ -162,9 +162,7 @@ public class DietaService {
             .ifPresentOrElse(dieta -> {
                 periodoAlimentoDietaRepository.deleteByDietaIdAndPeriodoIdAndAlimentoId(dieta.getId(),
                     request.getPeriodoId(), request.getAlimentoId());
-            }, () -> {
-                throw DIETA_NAO_ENCONTRADA_EXCEPTION;
-            });
+            }, () -> { throw DIETA_NAO_ENCONTRADA_EXCEPTION; });
         return new SuccessResponseDetails("O alimento foi removido da dieta com sucesso!");
     }
 }
