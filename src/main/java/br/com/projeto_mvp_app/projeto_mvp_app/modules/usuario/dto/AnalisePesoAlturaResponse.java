@@ -14,6 +14,8 @@ import java.util.Locale;
 @Data
 public class AnalisePesoAlturaResponse {
 
+    private static final Integer INDICE_PRIMEIRO_CARACTERE = 0;
+    private static final Integer INDICE_SEGUNDO_CARACTERE = 1;
     private static final Integer NUMERO_CASAS_DECIMAIS = 2;
 
     private String diaSemana;
@@ -32,7 +34,13 @@ public class AnalisePesoAlturaResponse {
         }
         response.setPeso(atual.getPeso());
         response.setData(atual.getDataCadastro().toLocalDate());
-        response.setDiaSemana(atual.getDataCadastro().getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("pt")));
+        response.setDiaSemana(response.recuperarDiaDaSemana(atual.getDataCadastro().toLocalDate()));
         return response;
+    }
+
+    private String recuperarDiaDaSemana(LocalDate dataAtual) {
+        var diaSemana = dataAtual.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("pt"));
+        return diaSemana.substring(INDICE_PRIMEIRO_CARACTERE, INDICE_SEGUNDO_CARACTERE).toUpperCase()
+            + diaSemana.substring(INDICE_SEGUNDO_CARACTERE);
     }
 }
