@@ -1,5 +1,6 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto;
 
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.predicate.UsuarioPredicate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,7 @@ public class UsuarioFiltros {
     private String nome;
     private String email;
     private String cpf;
-    private String permissao;
+    private EPermissao permissao;
 
     public UsuarioPredicate toPredicate() {
         return new UsuarioPredicate()
