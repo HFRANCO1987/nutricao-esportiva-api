@@ -1,4 +1,4 @@
-package br.com.projeto_mvp_app.projeto_mvp_app.usuario;
+package br.com.projeto_mvp_app.projeto_mvp_app.usuario.controller;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
 import org.junit.Test;

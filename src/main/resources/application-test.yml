@@ -1,5 +1,6 @@
 app-config:
   nome: NutricaoEsportiva
+  enable-rabbit: false
 
 spring:
   jpa:

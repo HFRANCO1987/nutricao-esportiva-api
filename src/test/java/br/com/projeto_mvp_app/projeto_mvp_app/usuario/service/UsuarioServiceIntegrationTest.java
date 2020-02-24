@@ -1,6 +1,8 @@
-package br.com.projeto_mvp_app.projeto_mvp_app.usuario;
+package br.com.projeto_mvp_app.projeto_mvp_app.usuario.service;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioFiltros;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.repository.PesoAlturaRepository;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.repository.UsuarioRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.AutenticacaoService;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.UsuarioService;
 import org.junit.Test;
@@ -24,14 +26,18 @@ import static org.mockito.Mockito.when;
 @Import(UsuarioService.class)
 @Sql(scripts = "classpath:/create-test-database.sql")
 @DataJpaTest
-public class UsuarioServiceTest {
+public class UsuarioServiceIntegrationTest {
 
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
     @MockBean
     private PasswordEncoder passwordEncoder;
     @MockBean
     private AutenticacaoService autenticacaoService;
+    @MockBean
+    private PesoAlturaRepository pesoAlturaRepository;
 
     @Test
     public void getUsuarios_deveRetornarUsuarios_quandoPassarPaginacaoSemFiltros() {

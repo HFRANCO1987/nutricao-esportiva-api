@@ -62,7 +62,7 @@ public class UsuarioMocks {
             .dataCadastro(LocalDateTime.now())
             .dataNascimento(LocalDate.parse("1998-03-31"))
             .senha("123456")
-            .sexo(ESexo.FEMININO)
+            .sexo(ESexo.MASCULINO)
             .ultimoAcesso(LocalDateTime.now())
             .build();
     }

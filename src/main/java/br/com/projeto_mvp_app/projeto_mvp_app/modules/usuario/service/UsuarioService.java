@@ -53,7 +53,7 @@ public class UsuarioService {
         usuario.setSenha(passwordEncoder.encode(usuarioRequest.getSenha()));
         usuario.setDataCadastro(LocalDateTime.now());
         usuario.setUltimoAcesso(LocalDateTime.now());
-        usuario = usuarioRepository.save(usuario);
+        usuarioRepository.save(usuario);
         if (!isEmpty(usuarioRequest.getPeso()) && !isEmpty(usuarioRequest.getAltura())) {
             tratarUsuarioPeso(usuarioRequest.getPeso(), usuarioRequest.getAltura(), usuario.getId());
         }
