@@ -1,9 +1,12 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.predicate;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.config.PredicateBase;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao;
+import com.querydsl.jpa.JPAExpressions;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.QUsuario.usuario;
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.QPermissao.permissao1;
 
 public class UsuarioPredicate extends PredicateBase {
 
@@ -28,9 +31,14 @@ public class UsuarioPredicate extends PredicateBase {
         return this;
     }
 
-    public UsuarioPredicate comPermissao(String permissao) {
+    public UsuarioPredicate comPermissao(EPermissao permissao) {
         if (!isEmpty(permissao)) {
-            builder.and(usuario.permissao.descricao.containsIgnoreCase(permissao));
+            builder.and(usuario.permissoes.contains(
+                JPAExpressions
+                    .selectFrom(permissao1)
+                    .where(permissao1.permissao.eq(permissao))
+                )
+            );
         }
         return this;
     }

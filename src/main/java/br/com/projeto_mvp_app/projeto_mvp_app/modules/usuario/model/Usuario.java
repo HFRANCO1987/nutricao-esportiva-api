@@ -11,9 +11,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.List;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao.USER;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.ESexo.FEMININO;
@@ -42,10 +44,6 @@ public class Usuario {
     @Column(name = "SENHA", nullable = false)
     private String senha;
 
-    @ManyToOne
-    @JoinColumn(name = "FK_PERMISSAO", nullable = false)
-    private Permissao permissao;
-
     @Column(name = "DATA_CADASTRO", nullable = false, updatable = false)
     private LocalDateTime dataCadastro;
 
@@ -61,6 +59,15 @@ public class Usuario {
     @Column(name = "SEXO", nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
     private ESexo sexo;
+
+    @NotNull
+    @JoinTable(name = "USUARIO_PERMISSAO", joinColumns = {
+        @JoinColumn(name = "FK_USUARIO", foreignKey = @ForeignKey(name = "FK_USUARIO_PK"),
+            referencedColumnName = "ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "FK_PERMISSAO", foreignKey = @ForeignKey(name = "FK_PERMISSAO_PK"),
+            referencedColumnName = "ID")})
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Permissao> permissoes;
 
     @Transient
     public Integer getIdade() {
@@ -91,7 +98,7 @@ public class Usuario {
         BeanUtils.copyProperties(usuarioRequest, usuario);
         usuario.setDataCadastro(LocalDateTime.now());
         usuario.setUltimoAcesso(LocalDateTime.now());
-        usuario.setPermissao(new Permissao(1, USER, "Usuário"));
+        usuario.setPermissoes(List.of(new Permissao(USER.getId(), USER, USER.getDescricao())));
         return usuario;
     }
 

@@ -51,6 +51,6 @@ public class UsuarioServiceTest {
         assertThat(usuarios.get(0).getId()).isEqualTo(7);
         assertThat(usuarios.get(0).getNome()).isEqualTo("Victor Hugo Negrisoli");
         assertThat(usuarios.get(0).getEmail()).isEqualTo("victorhugonegrisoli.ccs@gmail.com");
-        assertThat(usuarios.get(0).getPermissao().getDescricao()).isEqualTo("Administrador");
+        assertThat(usuarios.get(0).getPermissoes().get(0).getDescricao()).isEqualTo("Administrador");
     }
 }

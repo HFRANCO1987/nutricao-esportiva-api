@@ -10,6 +10,7 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class UsuarioMocks {
 
@@ -20,8 +21,7 @@ public class UsuarioMocks {
             .nome("Victor Hugo Negrisoli")
             .email("victorhugonegrisoli.ccs@gmail.com")
             .cpf("103.324.589-54")
-            .descricao("Administrador")
-            .permissao(EPermissao.ADMIN)
+            .permissoes(List.of(EPermissao.ADMIN))
             .ultimoAcesso(LocalDateTime.now())
             .build();
     }
@@ -55,7 +55,7 @@ public class UsuarioMocks {
         return Usuario
             .builder()
             .id(1)
-            .permissao(umaPermissao())
+            .permissoes(List.of(umaPermissaoAdmin()))
             .nome("Victor Hugo Negrisoli")
             .cpf("103.324.589-54")
             .email("victorhugonegrisoli.ccs@gmail.com")
@@ -67,12 +67,21 @@ public class UsuarioMocks {
             .build();
     }
 
-    public static Permissao umaPermissao() {
+    public static Permissao umaPermissaoAdmin() {
         return Permissao
             .builder()
-            .id(1)
-            .descricao("ADMIN")
+            .id(EPermissao.ADMIN.getId())
+            .descricao(EPermissao.ADMIN.getDescricao())
             .permissao(EPermissao.ADMIN)
+            .build();
+    }
+
+    public static Permissao umaPermissaoUser() {
+        return Permissao
+            .builder()
+            .id(EPermissao.USER.getId())
+            .descricao(EPermissao.USER.getDescricao())
+            .permissao(EPermissao.USER)
             .build();
     }
 }
