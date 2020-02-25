@@ -24,12 +24,6 @@ public class DietaController {
         return dietaService.salvar(request);
     }
 
-    @PostMapping("alimentos-periodos")
-    public SuccessResponseDetails salvarAlimentosPeriodos(@RequestBody PeriodoAlimentoDietaRequest request) {
-        dietaService.salvarAlimentosPeriodoDaDieta(request);
-        return new SuccessResponseDetails("Os alimentos e períodos foram adicionados à sua dieta!");
-    }
-
     @PostMapping("salvar-alimento")
     public SuccessResponseDetails salvarAlimentosNaDieta(@RequestBody DietaAlimentoRequest request) {
         return dietaService.salvarUmAlimentoPeriodoNaDieta(request);

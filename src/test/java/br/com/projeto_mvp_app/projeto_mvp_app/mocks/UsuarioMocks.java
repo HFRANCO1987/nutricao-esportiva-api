@@ -1,11 +1,13 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.mocks;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.dto.PageRequest;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.enums.EBoolean;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioAutenticado;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.ESexo;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Permissao;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.PesoAltura;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 
 import java.time.LocalDate;
@@ -82,6 +84,18 @@ public class UsuarioMocks {
             .id(EPermissao.USER.getId())
             .descricao(EPermissao.USER.getDescricao())
             .permissao(EPermissao.USER)
+            .build();
+    }
+
+    public static PesoAltura umPesoAltura() {
+        return PesoAltura
+            .builder()
+            .altura(1.83)
+            .dataCadastro(LocalDateTime.now())
+            .peso(94.5)
+            .id(1)
+            .usuario(umUsuario())
+            .pesoAlturaAtual(EBoolean.V)
             .build();
     }
 }

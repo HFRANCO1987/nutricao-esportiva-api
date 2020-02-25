@@ -7,7 +7,6 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.*;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Dieta;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Periodo;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.PeriodoAlimentoDieta;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.AlimentoRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.DietaRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.PeriodoAlimentoDietaRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.PeriodoRepository;
@@ -20,8 +19,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 @SuppressWarnings("PMD.UnusedPrivateField")
@@ -37,8 +34,6 @@ public class DietaService {
     @Autowired
     private PeriodoRepository periodoRepository;
     @Autowired
-    private AlimentoRepository alimentoRepository;
-    @Autowired
     private AutenticacaoService autenticacaoService;
 
     @Transactional
@@ -48,20 +43,21 @@ public class DietaService {
     }
 
     @Transactional
-    public void salvarAlimentosPeriodoDaDieta(PeriodoAlimentoDietaRequest request) {
-        validarDadosAlimentosPeriodosDieta(request);
+    public SuccessResponseDetails salvarUmAlimentoPeriodoNaDieta(DietaAlimentoRequest request) {
         validarPermissaoDoUsuarioSobreDieta(request.getDietaId());
-        desvincularItensAtuaisDaDieta(request.getDietaId());
-        periodoAlimentoDietaRepository.saveAll(criarListaPeriodosAlimentosDieta(request));
+        periodoAlimentoDietaRepository.save(PeriodoAlimentoDieta.of(request));
+        return new SuccessResponseDetails("O alimento foi inserido na dieta com sucesso!");
     }
 
-    private void validarDadosAlimentosPeriodosDieta(PeriodoAlimentoDietaRequest request) {
-        if (isEmpty(request.getDietaId())) {
-            throw new ValidacaoException("É necessário informar a dieta.");
-        }
-        if (isEmpty(request.getPeriodosAlimentos())) {
-            throw new ValidacaoException("É necessário informar os alimentos e os períodos.");
-        }
+    @Transactional
+    public SuccessResponseDetails removerUmAlimentoPeriodoNaDieta(DietaAlimentoRequest request) {
+        var usuarioLogado = autenticacaoService.getUsuarioAutenticado();
+        dietaRepository.findByIdAndUsuarioId(request.getDietaId(), usuarioLogado.getId())
+            .ifPresentOrElse(dieta -> {
+                periodoAlimentoDietaRepository.deleteByDietaIdAndPeriodoIdAndAlimentoId(dieta.getId(),
+                    request.getPeriodoId(), request.getAlimentoId());
+            }, () -> { throw DIETA_NAO_ENCONTRADA_EXCEPTION; });
+        return new SuccessResponseDetails("O alimento foi removido da dieta com sucesso!");
     }
 
     private void validarPermissaoDoUsuarioSobreDieta(Integer dietaId) {
@@ -69,20 +65,6 @@ public class DietaService {
         if (!dietaRepository.existsByIdAndUsuarioId(dietaId, usuarioLogadoId)) {
             throw new ValidacaoException("Você não tem permissão para alterar essa dieta.");
         }
-    }
-
-    private void desvincularItensAtuaisDaDieta(Integer dietaId) {
-        if (periodoAlimentoDietaRepository.existsByDietaId(dietaId)) {
-            periodoAlimentoDietaRepository.deleteByDietaId(dietaId);
-        }
-    }
-
-    private List<PeriodoAlimentoDieta> criarListaPeriodosAlimentosDieta(PeriodoAlimentoDietaRequest request) {
-        return request
-            .getPeriodosAlimentos()
-            .stream()
-            .map(periodosAlimentos -> PeriodoAlimentoDieta.of(request.getDietaId(), periodosAlimentos))
-            .collect(Collectors.toList());
     }
 
     public DietaResponse buscarDietaComDadosCompletos(Integer id) {
@@ -148,21 +130,4 @@ public class DietaService {
         }
     }
 
-    @Transactional
-    public SuccessResponseDetails salvarUmAlimentoPeriodoNaDieta(DietaAlimentoRequest request) {
-        validarPermissaoDoUsuarioSobreDieta(request.getDietaId());
-        periodoAlimentoDietaRepository.save(PeriodoAlimentoDieta.of(request));
-        return new SuccessResponseDetails("O alimento foi inserido na dieta com sucesso!");
-    }
-
-    @Transactional
-    public SuccessResponseDetails removerUmAlimentoPeriodoNaDieta(DietaAlimentoRequest request) {
-        var usuarioLogado = autenticacaoService.getUsuarioAutenticado();
-        dietaRepository.findByIdAndUsuarioId(request.getDietaId(), usuarioLogado.getId())
-            .ifPresentOrElse(dieta -> {
-                periodoAlimentoDietaRepository.deleteByDietaIdAndPeriodoIdAndAlimentoId(dieta.getId(),
-                    request.getPeriodoId(), request.getAlimentoId());
-            }, () -> { throw DIETA_NAO_ENCONTRADA_EXCEPTION; });
-        return new SuccessResponseDetails("O alimento foi removido da dieta com sucesso!");
-    }
 }

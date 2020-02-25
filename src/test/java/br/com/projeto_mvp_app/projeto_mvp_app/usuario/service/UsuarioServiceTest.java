@@ -17,8 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.mocks.UsuarioMocks.umUsuario;
-import static br.com.projeto_mvp_app.projeto_mvp_app.mocks.UsuarioMocks.umUsuarioRequest;
+import static br.com.projeto_mvp_app.projeto_mvp_app.mocks.UsuarioMocks.*;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -36,6 +35,28 @@ public class UsuarioServiceTest {
     private UsuarioRepository usuarioRepository;
     @Mock
     private PesoAlturaRepository pesoAlturaRepository;
+
+    @Test
+    public void save_deveSalvarUsuario_quandoDadosEstiveremCorretosComUsuarioAutenticado() {
+        when(pesoAlturaRepository
+            .findTop1ByUsuarioIdAndPesoAlturaAtualOrderByDataCadastroDesc(anyInt(), any()))
+            .thenReturn(Optional.of(umPesoAltura()));
+        when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.of(umUsuario()));
+        when(usuarioRepository.findById(anyInt())).thenReturn(Optional.of(umUsuario()));
+        when(usuarioRepository.findByCpf(anyString())).thenReturn(Optional.of(umUsuario()));
+        when(usuarioRepository.save(any())).thenReturn(umUsuario());
+        when(autenticacaoService.existeUsuarioAutenticado()).thenReturn(true);
+        when(autenticacaoService.getUsuarioAutenticado()).thenReturn(umUsuarioAutenticado());
+        when(pesoAlturaRepository.existsByUsuarioId(anyInt())).thenReturn(true);
+        when(pesoAlturaRepository.save(any())).thenReturn(umPesoAltura());
+
+        usuarioService.save(umUsuarioRequest());
+
+        verify(usuarioRepository, times(1)).save(any(Usuario.class));
+        verify(pesoAlturaRepository, times(1)).atualizarPesoAlturaAtualByUsuarioId(any(),
+            any(Usuario.class));
+        verify(pesoAlturaRepository, times(1)).save(any(PesoAltura.class));
+    }
 
     @Test
     public void save_deveSalvarUsuario_quandoDadosEstiveremCorretosSemUsuarioAutenticado() {

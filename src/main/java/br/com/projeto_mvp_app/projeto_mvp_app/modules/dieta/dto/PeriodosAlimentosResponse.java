@@ -16,7 +16,7 @@ public class PeriodosAlimentosResponse {
 
     private Integer id;
     private String descricao;
-    private List<AlimentoResponse>  alimentos;
+    private List<AlimentoResponse> alimentos;
 
     public static PeriodosAlimentosResponse of(Periodo periodo, List<AlimentoResponse> alimentos) {
         return PeriodosAlimentosResponse
