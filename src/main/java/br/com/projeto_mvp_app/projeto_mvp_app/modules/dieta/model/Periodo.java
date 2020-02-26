@@ -31,7 +31,7 @@ public class Periodo {
     @Enumerated(EnumType.STRING)
     private EBoolean padrao;
 
-    @JoinColumn(name = "FK_USUARIO", nullable = false)
+    @JoinColumn(name = "FK_USUARIO")
     @JsonIgnore
     @ManyToOne
     private Usuario usuario;

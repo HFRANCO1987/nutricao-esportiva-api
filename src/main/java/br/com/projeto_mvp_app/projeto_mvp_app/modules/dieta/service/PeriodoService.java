@@ -61,7 +61,7 @@ public class PeriodoService {
 
     private void validarPeriodoPadraoJaAdicionado(Periodo periodo) {
         if (periodoRepository.existsByPadraoAndDescricaoIgnoreCase(EBoolean.V, periodo.getDescricao())) {
-            throw new ValidacaoException("O período " + periodo.getDescricao() + " já está existe.");
+            throw new ValidacaoException("O período " + periodo.getDescricao() + " já existe.");
         }
     }
 
