@@ -1,4 +1,4 @@
-package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto;
+package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.alimento;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.predicate.AlimentoPredicate;
 import lombok.Data;

@@ -1,7 +1,6 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.predicate;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.config.PredicateBase;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.enums.EPeriodo;
 import com.querydsl.jpa.JPAExpressions;
 
 import java.time.LocalDateTime;
@@ -54,15 +53,15 @@ public class DietaPredicate extends PredicateBase {
         return this;
     }
 
-    public DietaPredicate comPeriodo(EPeriodo codigo) {
-        if (!isEmpty(codigo)) {
+    public DietaPredicate comPeriodo(String descricao) {
+        if (!isEmpty(descricao)) {
             builder.and(dieta.id.in(
                 JPAExpressions
                     .select(dieta.id)
                     .from(periodoAlimentoDieta)
                     .leftJoin(periodoAlimentoDieta.dieta, dieta)
                     .leftJoin(periodoAlimentoDieta.periodo, periodo)
-                    .where(periodo.codigo.eq(codigo))
+                    .where(periodo.descricao.containsIgnoreCase(descricao))
             ));
         }
         return this;

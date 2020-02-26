@@ -1,8 +1,8 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.controller;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.dto.PageRequest;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.AlimentoFiltros;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.AlimentoResponse;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.alimento.AlimentoFiltros;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.alimento.AlimentoResponse;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Categoria;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.service.AlimentoService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model;
 
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.DietaRequest;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.dieta.DietaRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;

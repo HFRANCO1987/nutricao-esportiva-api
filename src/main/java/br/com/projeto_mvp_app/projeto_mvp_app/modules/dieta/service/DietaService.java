@@ -3,13 +3,13 @@ package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.service;
 import br.com.projeto_mvp_app.projeto_mvp_app.config.exception.ValidacaoException;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.dto.PageRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.response.SuccessResponseDetails;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.*;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.alimento.AlimentoResponse;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.dieta.*;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.periodo.PeriodoResponse;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Dieta;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Periodo;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.PeriodoAlimentoDieta;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.DietaRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.PeriodoAlimentoDietaRepository;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.PeriodoRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.AutenticacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,21 +32,16 @@ public class DietaService {
     @Autowired
     private PeriodoAlimentoDietaRepository periodoAlimentoDietaRepository;
     @Autowired
-    private PeriodoRepository periodoRepository;
-    @Autowired
     private AutenticacaoService autenticacaoService;
+    @Autowired
+    private PeriodoService buscarPeriodos;
 
     @Transactional
     public DietaCompletaResponse salvar(DietaRequest request) {
         var usuarioLogado = autenticacaoService.getUsuarioAutenticado();
         var dieta = Dieta.of(request, usuarioLogado.getId());
-        vincularPeriodosPadroesParaDieta(dieta);
         dietaRepository.save(dieta);
         return buscarDietaAtualCompleta();
-    }
-
-    private void vincularPeriodosPadroesParaDieta(Dieta dieta) {
-
     }
 
     @Transactional
@@ -94,10 +89,6 @@ public class DietaService {
             .collect(Collectors.toList());
     }
 
-    public List<Periodo> buscarPeriodos() {
-        return periodoRepository.findAll();
-    }
-
     public DietaCompletaResponse buscarDietaCompleta(Integer id) {
         var usuarioAutenticado = autenticacaoService.getUsuarioAutenticado();
         var dieta = dietaRepository.findByIdAndUsuarioId(id, usuarioAutenticado.getId());
@@ -106,19 +97,19 @@ public class DietaService {
         } else {
             var dietaAtual = dieta.get();
             return DietaCompletaResponse.of(dietaAtual, criarResponseDePeriodos(dietaAtual.getId(),
-                buscarPeriodos()));
+                buscarPeriodos.buscarPeriodos()));
         }
     }
 
     private List<AlimentoResponse> buscarAlimentosPorDietaEPeriodo(Integer dietaId, Integer periodoId) {
         return periodoAlimentoDietaRepository.findByDietaIdAndPeriodoId(dietaId, periodoId)
             .stream()
-            .map(alimento -> AlimentoResponse.of(alimento.getAlimento()))
+            .map(alimento -> AlimentoResponse.of(alimento.getQuantidade(), alimento.getAlimento()))
             .collect(Collectors.toList());
     }
 
-    private List<PeriodosAlimentosResponse> criarResponseDePeriodos(Integer dietaId, List<Periodo> periodosDaDieta) {
-        return periodosDaDieta
+    private List<PeriodosAlimentosResponse> criarResponseDePeriodos(Integer dietaId, List<PeriodoResponse> periodos) {
+        return periodos
             .stream()
             .map(periodo -> PeriodosAlimentosResponse.of(periodo,
                 buscarAlimentosPorDietaEPeriodo(dietaId, periodo.getId())))
@@ -133,7 +124,7 @@ public class DietaService {
         } else {
             var dietaAtual = dieta.get();
             return DietaCompletaResponse.of(dietaAtual, criarResponseDePeriodos(dietaAtual.getId(),
-                buscarPeriodos()));
+                buscarPeriodos.buscarPeriodos()));
         }
     }
 }

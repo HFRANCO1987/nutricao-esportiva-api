@@ -2,8 +2,8 @@ package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.service;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.config.exception.ValidacaoException;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.dto.PageRequest;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.AlimentoFiltros;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.AlimentoResponse;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.alimento.AlimentoFiltros;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.alimento.AlimentoResponse;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Categoria;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.AlimentoRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.CategoriaRepository;
@@ -24,18 +24,20 @@ public class AlimentoService {
     private CategoriaRepository categoriaRepository;
 
     public Page buscarTodos(PageRequest pageable, AlimentoFiltros filtros) {
-        return alimentoRepository.findAll(filtros.toPredicate().build(), pageable).map(AlimentoResponse::of);
+        return alimentoRepository
+            .findAll(filtros.toPredicate().build(), pageable)
+            .map(alimento -> AlimentoResponse.of(null, alimento));
     }
 
     public List<AlimentoResponse> buscarTodosSemPaginacao(AlimentoFiltros filtros) {
         return StreamSupport
             .stream(alimentoRepository.findAll(filtros.toPredicate().build()).spliterator(), false)
-            .map(AlimentoResponse::of)
+            .map(alimento -> AlimentoResponse.of(null, alimento))
             .collect(Collectors.toList());
     }
 
     public AlimentoResponse buscarPorId(Integer id) {
-        return AlimentoResponse.of(alimentoRepository.findById(id)
+        return AlimentoResponse.of(null, alimentoRepository.findById(id)
             .orElseThrow(() -> new ValidacaoException("O alimento não foi encontrado."))) ;
     }
 

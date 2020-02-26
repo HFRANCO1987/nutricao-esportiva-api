@@ -1,4 +1,4 @@
-package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto;
+package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.dieta;
 
 import lombok.Data;
 
