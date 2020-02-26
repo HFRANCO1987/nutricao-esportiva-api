@@ -41,4 +41,7 @@ public class AutenticacaoService {
         return !isEmpty(authentication) && !authentication.getName().equals(ANONYMOUS_USER);
     }
 
+    public Integer getUsuarioAutenticadoId() {
+        return getUsuarioAutenticado().getId();
+    }
 }

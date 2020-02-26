@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.config.Aplicacao.APLICACAO;
 import static br.com.projeto_mvp_app.projeto_mvp_app.modules.log.enums.ETipoOperacao.ALTERANDO;
@@ -40,7 +39,7 @@ public class LogService {
     private LogSender logSender;
 
     public void gerarLogUsuario(HttpServletRequest request) {
-        if (isUrlValidaParaLog(request.getRequestURI())) {
+        if (autenticacaoService.existeUsuarioAutenticado()) {
             var usuarioLogado = autenticacaoService.getUsuarioAutenticado();
             var log = LogRequest
                 .builder()
@@ -55,16 +54,6 @@ public class LogService {
                 .build();
             logSender.produceMessage(log);
         }
-    }
-
-    private boolean isUrlValidaParaLog(String uri) {
-        var isValida = new AtomicBoolean(true);
-        URLS_IGNORADAS.forEach(urlIgnorada -> {
-            if (uri.contains(urlIgnorada)) {
-                isValida.set(false);
-            }
-        });
-        return isValida.get();
     }
 
     private String definirTipoAcesso(String metodo) {

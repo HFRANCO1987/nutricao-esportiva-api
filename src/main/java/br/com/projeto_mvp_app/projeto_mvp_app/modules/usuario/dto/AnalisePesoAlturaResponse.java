@@ -2,7 +2,10 @@ package br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.PesoAltura;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -12,6 +15,9 @@ import java.time.format.TextStyle;
 import java.util.Locale;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AnalisePesoAlturaResponse {
 
     private static final Integer INDICE_PRIMEIRO_CARACTERE = 0;
