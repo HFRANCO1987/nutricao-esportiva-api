@@ -15,10 +15,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.mocks.UsuarioMocks.*;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -136,5 +139,60 @@ public class UsuarioServiceTest {
         assertThatExceptionOfType(ValidacaoException.class)
             .isThrownBy(() -> usuarioService.save(request))
             .withMessage("CPF já cadastrado para um usuário ativo.");
+    }
+
+    @Test
+    public void tratarUsuarioPeso_deveAtualizarPesoAltura_quandoInformado() {
+        when(autenticacaoService.existeUsuarioAutenticado()).thenReturn(true);
+        when(autenticacaoService.getUsuarioAutenticado()).thenReturn(umUsuarioAutenticado());
+        when(pesoAlturaRepository.existsByUsuarioId(anyInt())).thenReturn(true);
+        when(pesoAlturaRepository.findTop1ByUsuarioIdAndPesoAlturaAtualOrderByDataCadastroDesc(anyInt(), any()))
+            .thenReturn(Optional.of(umPesoAltura()));
+        when(usuarioRepository.findById(anyInt())).thenReturn(Optional.of(umUsuario()));
+        when(pesoAlturaRepository.findByUsuarioIdOrderByDataCadastroDesc(anyInt()))
+            .thenReturn(List.of(umPesoAltura(), umPesoAlturaAnalise()));
+        when(pesoAlturaRepository.save(any())).thenReturn(umPesoAlturaAnalise());
+
+        var analise = usuarioService.tratarUsuarioPeso(89.8, 1.73, 7);
+
+        assertThat(analise).isNotNull();
+        assertThat(analise.getMensagem()).isEqualTo("Olá, Victor Hugo Negrisoli, você manteve seu peso atual de 94.5kg");
+        assertThat(analise.getDiferencaPeriodo()).isEqualTo("1 mês");
+        assertThat(analise.getAnalisePesoAltura().size()).isEqualTo(2);
+
+        verify(pesoAlturaRepository, times(1))
+            .atualizarPesoAlturaAtualByUsuarioId(any(), any(Usuario.class));
+        verify(pesoAlturaRepository, times(1))
+            .save(any(PesoAltura.class));
+    }
+
+    @Test
+    public void verificarPesagemNaUltimaSemana_deveRetornarMensagemUltimaPesagemAtual_quandoDadosEstiveremCorretos() {
+        when(autenticacaoService.getUsuarioAutenticado()).thenReturn(umUsuarioAutenticado());
+        when(pesoAlturaRepository.findTop1ByUsuarioIdAndPesoAlturaAtualOrderByDataCadastroDesc(anyInt(), any()))
+            .thenReturn(Optional.of(umPesoAltura()));
+        var response = usuarioService.verificarPesagemNaUltimaSemana();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getUsuarioId()).isEqualTo(7);
+        assertThat(response.getUsuarioNome()).isEqualTo("Victor Hugo Negrisoli");
+        assertThat(response.getMensagem())
+            .isEqualTo("Você não se pesa há mais de uma semana, vamos se pesar?");
+    }
+
+    @Test
+    public void verificarPesagemNaUltimaSemana_deveRetornarMensagemUltimaPesagemMaisUmaSemana_quandoDadosEstiveremCorretos() {
+        when(autenticacaoService.getUsuarioAutenticado()).thenReturn(umUsuarioAutenticado());
+        when(pesoAlturaRepository.findTop1ByUsuarioIdAndPesoAlturaAtualOrderByDataCadastroDesc(anyInt(), any()))
+            .thenReturn(Optional.of(umPesoAlturaAtual()));
+        var response = usuarioService.verificarPesagemNaUltimaSemana();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getUsuarioId()).isEqualTo(7);
+        assertThat(response.getUsuarioNome()).isEqualTo("Victor Hugo Negrisoli");
+        assertThat(response.getMensagem())
+            .isEqualTo("A última vez que você se pesou foi em "
+                + LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                + ", e seu peso era 94.5kg.");
     }
 }

@@ -97,7 +97,6 @@ public class Usuario {
         var usuario = new Usuario();
         BeanUtils.copyProperties(usuarioRequest, usuario);
         usuario.setDataCadastro(LocalDateTime.now());
-        usuario.setUltimoAcesso(LocalDateTime.now());
         usuario.setPermissoes(List.of(new Permissao(USER.getId(), USER, USER.getDescricao())));
         return usuario;
     }

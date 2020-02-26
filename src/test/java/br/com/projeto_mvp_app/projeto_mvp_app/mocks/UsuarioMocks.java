@@ -91,7 +91,31 @@ public class UsuarioMocks {
         return PesoAltura
             .builder()
             .altura(1.83)
-            .dataCadastro(LocalDateTime.now())
+            .dataCadastro(LocalDateTime.parse("2020-01-01T00:00"))
+            .peso(94.5)
+            .id(1)
+            .usuario(umUsuario())
+            .pesoAlturaAtual(EBoolean.V)
+            .build();
+    }
+
+    public static PesoAltura umPesoAlturaAtual() {
+        return PesoAltura
+            .builder()
+            .altura(1.83)
+            .dataCadastro(LocalDateTime.now().minusDays(1))
+            .peso(94.5)
+            .id(1)
+            .usuario(umUsuario())
+            .pesoAlturaAtual(EBoolean.V)
+            .build();
+    }
+
+    public static PesoAltura umPesoAlturaAnalise() {
+        return PesoAltura
+            .builder()
+            .altura(1.83)
+            .dataCadastro(LocalDateTime.parse("2020-02-25T00:00"))
             .peso(94.5)
             .id(1)
             .usuario(umUsuario())
