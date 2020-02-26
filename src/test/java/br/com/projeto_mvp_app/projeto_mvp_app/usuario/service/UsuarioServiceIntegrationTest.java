@@ -1,6 +1,5 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.usuario.service;
 
-import br.com.projeto_mvp_app.projeto_mvp_app.config.exception.ValidacaoException;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.UsuarioFiltros;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.enums.EPermissao;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.repository.PesoAlturaRepository;
@@ -24,7 +23,6 @@ import java.time.LocalDate;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.mocks.UsuarioMocks.getPage;
 import static br.com.projeto_mvp_app.projeto_mvp_app.mocks.UsuarioMocks.umUsuarioAutenticado;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -91,25 +89,6 @@ public class UsuarioServiceIntegrationTest {
         var ultimoAcessoNovo = usuarioService.getUsuarioAutenticadoAtualizaUltimaData().getUltimoAcesso();
         assertThat(ultimoAcessoAntigo).isNotEqualTo(ultimoAcessoNovo);
         assertThat(ultimoAcessoNovo.toLocalDate()).isEqualTo(LocalDate.now());
-    }
-
-    @Test
-    public void buscarUsuarioComHistoricoDePesoEAltura_deveRetornarUsuarioHistorico_quandoHouverPesoAltura() {
-        when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(7);
-
-        var usuarioHistoricoPesoAltura = usuarioService.buscarUsuarioComHistoricoDePesoEAltura();
-        assertThat(usuarioHistoricoPesoAltura).isNotNull();
-        assertThat(usuarioHistoricoPesoAltura.getUsuario().getNome()).isEqualTo("Victor Hugo Negrisoli");
-        assertThat(usuarioHistoricoPesoAltura.getPesoAlturaHistorico().size()).isEqualTo(4);
-    }
-
-    @Test
-    public void buscarUsuarioComHistoricoDePesoEAltura_deveLancarException_quandoUsuarioNaoExistir() {
-        when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(150);
-
-        assertThatExceptionOfType(ValidacaoException.class)
-            .isThrownBy(() -> usuarioService.buscarUsuarioComHistoricoDePesoEAltura())
-            .withMessage("Usuário não encontrado.");
     }
 
     @Test

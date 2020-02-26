@@ -124,12 +124,6 @@ public class UsuarioService {
         return usuarioRepository.findAll(filtros.toPredicate().build(), pageable);
     }
 
-    public UsuarioPesoAlturaResponse buscarUsuarioComHistoricoDePesoEAltura() {
-        var usuarioId = autenticacaoService.getUsuarioAutenticadoId();
-        return UsuarioPesoAlturaResponse.of(usuarioRepository.findById(usuarioId)
-                .orElseThrow(USUARIO_NAO_ENCONTRADO::getException), retornarHistoricoPorUsuarioId(usuarioId));
-    }
-
     public List<PesoAltura> retornarHistoricoPorUsuarioId(Integer usuarioId) {
         return pesoAlturaRepository.findByUsuarioIdOrderByDataCadastroDesc(usuarioId);
     }
