@@ -25,7 +25,7 @@ O projeto é subdividido em módulos, utiliza arquitetura de API REST e microsse
 É necessário ter as seguintes ferramentas para inicializar o projeto:
 
 ```
-**Java 11.0.3**
+Java 11.0.3
 Maven
 mvn
 RabbitMQ
