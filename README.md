@@ -8,26 +8,24 @@ O projeto é subdividido em módulos, utiliza arquitetura de API REST e microsse
 
 ### Tecnologias
 
-```
-Java 11
-Spring Boot 2
-Spring Security
-OAuth 2.0
-Spring Data JPA
-Spring Cloud Open Feign
-RabbitMQ
-QueryDSL
-Redis
-PostgreSQL 11
-REST API
-```
+* **Java 11**
+* **Spring Boot 2**
+* **Spring Security**
+* **OAuth 2.0**
+* **Spring Data JPA**
+* **Spring Cloud Open Feign**
+* **RabbitMQ**
+* **QueryDSL**
+* **Redis**
+* **PostgreSQL 11**
+* **REST API**
 
 ### Pré-requisitos
 
 É necessário ter as seguintes ferramentas para inicializar o projeto:
 
 ```
-Java 11.0.3
+**Java 11.0.3**
 Maven
 mvn
 RabbitMQ
