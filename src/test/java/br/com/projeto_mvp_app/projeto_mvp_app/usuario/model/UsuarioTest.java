@@ -6,8 +6,8 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.util.List;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.mocks.UsuarioMocks.*;
-import static br.com.projeto_mvp_app.projeto_mvp_app.mocks.UsuarioMocks.umUsuario;
+import static br.com.projeto_mvp_app.projeto_mvp_app.usuario.mocks.UsuarioMocks.*;
+import static br.com.projeto_mvp_app.projeto_mvp_app.usuario.mocks.UsuarioMocks.umUsuario;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class UsuarioTest {

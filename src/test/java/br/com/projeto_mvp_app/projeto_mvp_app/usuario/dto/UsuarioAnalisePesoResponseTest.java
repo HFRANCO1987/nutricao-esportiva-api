@@ -5,7 +5,8 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.mocks.UsuarioMocks.*;
+import static br.com.projeto_mvp_app.projeto_mvp_app.usuario.mocks.PesoAlturaMocks.*;
+import static br.com.projeto_mvp_app.projeto_mvp_app.usuario.mocks.UsuarioMocks.umUsuario;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UsuarioAnalisePesoResponseTest {

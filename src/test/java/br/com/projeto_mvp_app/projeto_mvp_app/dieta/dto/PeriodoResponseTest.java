@@ -3,7 +3,7 @@ package br.com.projeto_mvp_app.projeto_mvp_app.dieta.dto;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.periodo.PeriodoResponse;
 import org.junit.Test;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.dieta.mocks.PeriodoMock.umPeriodoUsuario;
+import static br.com.projeto_mvp_app.projeto_mvp_app.dieta.mocks.PeriodoMocks.umPeriodoUsuario;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PeriodoResponseTest {

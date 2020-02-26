@@ -54,6 +54,7 @@ public class DietaService {
     @Transactional
     public SuccessResponseDetails removerUmAlimentoPeriodoNaDieta(DietaAlimentoRequest request) {
         var usuarioLogado = autenticacaoService.getUsuarioAutenticado();
+        validarPermissaoDoUsuarioSobreDieta(request.getDietaId());
         dietaRepository.findByIdAndUsuarioId(request.getDietaId(), usuarioLogado.getId())
             .ifPresentOrElse(dieta -> {
                 periodoAlimentoDietaRepository.deleteByDietaIdAndPeriodoIdAndAlimentoId(dieta.getId(),

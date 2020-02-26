@@ -4,7 +4,7 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.enums.EBoolean;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Periodo;
 import org.junit.Test;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.dieta.mocks.PeriodoMock.umPeriodoRequest;
+import static br.com.projeto_mvp_app.projeto_mvp_app.dieta.mocks.PeriodoMocks.umPeriodoRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PeriodoTest {

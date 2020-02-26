@@ -21,8 +21,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.mocks.UsuarioMocks.getPage;
-import static br.com.projeto_mvp_app.projeto_mvp_app.mocks.UsuarioMocks.umUsuarioAutenticado;
+import static br.com.projeto_mvp_app.projeto_mvp_app.usuario.mocks.UsuarioMocks.getPage;
+import static br.com.projeto_mvp_app.projeto_mvp_app.usuario.mocks.UsuarioMocks.umUsuarioAutenticado;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.when;

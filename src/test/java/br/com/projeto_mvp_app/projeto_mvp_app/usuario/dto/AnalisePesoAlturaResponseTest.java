@@ -6,8 +6,8 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.mocks.UsuarioMocks.umPesoAlturaAnalise;
-import static br.com.projeto_mvp_app.projeto_mvp_app.mocks.UsuarioMocks.umPesoAlturaAtual;
+import static br.com.projeto_mvp_app.projeto_mvp_app.usuario.mocks.PesoAlturaMocks.umPesoAlturaAnalise;
+import static br.com.projeto_mvp_app.projeto_mvp_app.usuario.mocks.PesoAlturaMocks.umPesoAlturaAtual;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnalisePesoAlturaResponseTest {
