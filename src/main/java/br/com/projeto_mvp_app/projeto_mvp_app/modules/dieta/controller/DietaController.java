@@ -20,7 +20,7 @@ public class DietaController {
     private DietaService dietaService;
 
     @PostMapping
-    public Dieta salvar(@RequestBody DietaRequest request) {
+    public DietaCompletaResponse salvar(@RequestBody DietaRequest request) {
         return dietaService.salvar(request);
     }
 

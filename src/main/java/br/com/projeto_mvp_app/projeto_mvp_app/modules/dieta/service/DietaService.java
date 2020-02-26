@@ -37,9 +37,16 @@ public class DietaService {
     private AutenticacaoService autenticacaoService;
 
     @Transactional
-    public Dieta salvar(DietaRequest request) {
+    public DietaCompletaResponse salvar(DietaRequest request) {
         var usuarioLogado = autenticacaoService.getUsuarioAutenticado();
-        return dietaRepository.save(Dieta.of(request, usuarioLogado.getId()));
+        var dieta = Dieta.of(request, usuarioLogado.getId());
+        vincularPeriodosPadroesParaDieta(dieta);
+        dietaRepository.save(dieta);
+        return buscarDietaAtualCompleta();
+    }
+
+    private void vincularPeriodosPadroesParaDieta(Dieta dieta) {
+
     }
 
     @Transactional
@@ -129,5 +136,4 @@ public class DietaService {
                 buscarPeriodos()));
         }
     }
-
 }
