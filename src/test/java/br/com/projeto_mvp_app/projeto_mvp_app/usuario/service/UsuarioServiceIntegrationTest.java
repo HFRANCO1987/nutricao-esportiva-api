@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @Import(UsuarioService.class)
-@Sql(scripts = "classpath:/create-test-database.sql")
+@Sql(scripts = "classpath:/usuarios-test.sql")
 @DataJpaTest
 public class UsuarioServiceIntegrationTest {
 

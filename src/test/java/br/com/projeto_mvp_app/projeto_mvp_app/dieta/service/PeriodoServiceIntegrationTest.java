@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @Import(PeriodoService.class)
-@Sql(scripts = {"classpath:/create-test-database.sql", "classpath:/periodos-test.sql"})
+@Sql(scripts = {"classpath:/usuarios-test.sql", "classpath:/periodos-test.sql"})
 @DataJpaTest
 public class PeriodoServiceIntegrationTest {
 
