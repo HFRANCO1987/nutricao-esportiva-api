@@ -6,6 +6,7 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.response.SuccessResp
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.periodo.PeriodoRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.periodo.PeriodoResponse;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Periodo;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.PeriodoAlimentoDietaRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.PeriodoRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.AutenticacaoService;
@@ -25,6 +26,8 @@ public class PeriodoService {
     private PeriodoRepository periodoRepository;
     @Autowired
     private AutenticacaoService autenticacaoService;
+    @Autowired
+    private PeriodoAlimentoDietaRepository periodoAlimentoDietaRepository;
 
     @Transactional
     public SuccessResponseDetails adicionarPeriodoUsuario(PeriodoRequest request) {
@@ -62,6 +65,29 @@ public class PeriodoService {
     private void validarPeriodoPadraoJaAdicionado(Periodo periodo) {
         if (periodoRepository.existsByPadraoAndDescricaoIgnoreCase(EBoolean.V, periodo.getDescricao())) {
             throw new ValidacaoException("O período " + periodo.getDescricao() + " já existe.");
+        }
+    }
+
+    @Transactional
+    public SuccessResponseDetails removerPeriodoUsuario(Integer id) {
+        var usuarioLogadoId = autenticacaoService.getUsuarioAutenticadoId();
+        var periodo = periodoRepository.findById(id)
+            .orElseThrow(() -> new ValidacaoException("O período não existe."));
+        validarTentativaDeRemoverPeriodoPadrao(periodo);
+        validarPeriodoExistenteParaDieta(periodo.getId());
+        periodoRepository.deleteByIdAndUsuarioId(periodo.getId(), usuarioLogadoId);
+        return new SuccessResponseDetails("O período " + periodo.getDescricao() + " foi removido com sucesso!");
+    }
+
+    private void validarTentativaDeRemoverPeriodoPadrao(Periodo periodo) {
+        if (periodo.isPadrao()) {
+            throw new ValidacaoException("Não é possível remover um período padrão.");
+        }
+    }
+
+    private void validarPeriodoExistenteParaDieta(Integer periodoId) {
+        if (periodoAlimentoDietaRepository.existsByPeriodoId(periodoId)) {
+            throw new ValidacaoException("Esse período já está vinculado a uma dieta.");
         }
     }
 

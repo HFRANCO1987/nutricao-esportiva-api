@@ -15,4 +15,6 @@ public interface PeriodoRepository extends JpaRepository<Periodo, Integer> {
     Boolean existsByUsuarioIdAndDescricaoIgnoreCase(Integer usuarioId, String descricao);
 
     Boolean existsByPadraoAndDescricaoIgnoreCase(EBoolean padrao, String descricao);
+
+    void deleteByIdAndUsuarioId(Integer id, Integer usuarioId);
 }

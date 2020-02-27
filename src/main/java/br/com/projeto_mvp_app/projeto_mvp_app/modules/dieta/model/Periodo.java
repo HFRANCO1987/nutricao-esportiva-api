@@ -12,6 +12,8 @@ import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Data
 @Entity
 @Builder
@@ -35,6 +37,11 @@ public class Periodo {
     @JsonIgnore
     @ManyToOne
     private Usuario usuario;
+
+    @JsonIgnore
+    public boolean isPadrao() {
+        return !isEmpty(padrao) && padrao.equals(EBoolean.V);
+    }
 
     public Periodo(Integer id) {
         this.id = id;
