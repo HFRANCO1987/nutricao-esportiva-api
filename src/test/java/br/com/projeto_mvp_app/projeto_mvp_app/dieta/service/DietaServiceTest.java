@@ -43,13 +43,14 @@ public class DietaServiceTest {
     public void salvar_deveSalvarNovaDieta_quandoDadosEstiveremCoretos() {
         when(autenticacaoService.getUsuarioAutenticado()).thenReturn(umUsuarioAutenticado());
         when(dietaRepository.findFirstByUsuarioIdOrderByDataCadastroDesc(anyInt())).thenReturn(Optional.of(umaDieta()));
-        when(periodoService.buscarPeriodos()).thenReturn(List.of((umPeriodoResponse())));
+        when(periodoService.buscarPeriodosDoUsuario()).thenReturn(List.of((umPeriodoResponse())));
         when(periodoAlimentoDietaRepository.findByDietaIdAndPeriodoId(anyInt(), anyInt()))
             .thenReturn(List.of(umPeriodoAlimentoDieta()));
 
         dietaService.salvar(umaDietaRequest());
 
         verify(dietaRepository, times(1)).save(any(Dieta.class));
+        verify(periodoService, times(1)).adicionarPeriodosPadroes();
     }
 
     @Test

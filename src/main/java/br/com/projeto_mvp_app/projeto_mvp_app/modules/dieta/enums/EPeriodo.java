@@ -9,7 +9,7 @@ public enum EPeriodo {
     MANHA("Manhã"),
     ALMOCO("Almoço"),
     TARDE("Tarde"),
-    NOITE("NOite");
+    NOITE("Noite");
 
     @Getter
     private String periodo;

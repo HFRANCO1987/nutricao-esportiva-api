@@ -29,8 +29,28 @@ public class PeriodoServiceIntegrationTest {
     private AutenticacaoService autenticacaoService;
 
     @Test
-    public void buscarPeriodosPadroes_deveRetornarApenasPadroes_quandoFlagForTure() {
-        assertThat(periodoService.buscarPeriodosPadroes())
+    public void buscarPeriodosDoUsuario_deveRetornarApenasPeriodosDoUsuario_quandoFlagForFalsaPorIdUsuario() {
+        when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(7);
+        assertThat(periodoService.buscarPeriodosDoUsuario())
+            .hasSize(6)
+            .extracting("id", "descricao")
+            .containsExactlyInAnyOrder(
+                tuple(10, "Manhã"),
+                tuple(11, "Almoço"),
+                tuple(12, "Tarde"),
+                tuple(13, "Noite"),
+                tuple(5, "Pré-Treino"),
+                tuple(6, "Pós-Treino")
+            );
+    }
+
+    @Test
+    public void adicionarPeriodosPadroes_deveVincular4PeriodosPadroes_quandoDadosEstiveremCorretos() {
+        when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(3);
+
+        periodoService.adicionarPeriodosPadroes();
+
+        assertThat(periodoService.buscarPeriodosDoUsuario())
             .hasSize(4)
             .extracting("id", "descricao")
             .containsExactlyInAnyOrder(
@@ -38,34 +58,6 @@ public class PeriodoServiceIntegrationTest {
                 tuple(2, "Almoço"),
                 tuple(3, "Tarde"),
                 tuple(4, "Noite")
-            );
-    }
-
-    @Test
-    public void buscarPeriodosDoUsuario_deveRetornarApenasPeriodosDoUsuario_quandoFlagForFalsaPorIdUsuario() {
-        when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(7);
-        assertThat(periodoService.buscarPeriodosDoUsuario())
-            .hasSize(2)
-            .extracting("id", "descricao")
-            .containsExactlyInAnyOrder(
-                tuple(5, "Pré-Treino"),
-                tuple(6, "Pós-Treino")
-            );
-    }
-
-    @Test
-    public void buscarPeriodos_deveRetornarPadroesComPeriodosDoUsuario_quandoHouverBuscaPorIdUsuario() {
-        when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(7);
-        assertThat(periodoService.buscarPeriodos())
-            .hasSize(6)
-            .extracting("id", "descricao")
-            .containsExactlyInAnyOrder(
-                tuple(1, "Manhã"),
-                tuple(2, "Almoço"),
-                tuple(3, "Tarde"),
-                tuple(4, "Noite"),
-                tuple(5, "Pré-Treino"),
-                tuple(6, "Pós-Treino")
             );
     }
 }

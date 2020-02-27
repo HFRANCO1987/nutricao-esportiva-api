@@ -14,7 +14,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.dieta.mocks.PeriodoMocks.*;
+import static br.com.projeto_mvp_app.projeto_mvp_app.dieta.mocks.PeriodoMocks.umPeriodoRequest;
+import static br.com.projeto_mvp_app.projeto_mvp_app.dieta.mocks.PeriodoMocks.umPeriodoUsuario;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -33,38 +34,6 @@ public class PeriodoServiceTest {
     private PeriodoAlimentoDietaRepository periodoAlimentoDietaRepository;
 
     @Test
-    public void adicionarPeriodoPadrao_deveSalvarPeriodoPadrao_quandoDadosEstiveremCorretos() {
-        when(periodoRepository.existsByPadraoAndDescricaoIgnoreCase(any(), anyString())).thenReturn(false);
-
-        var request = umPeriodoRequest();
-        periodoService.adicionarPeriodoPadrao(request);
-
-        verify(periodoRepository, times(1)).save(any(Periodo.class));
-    }
-
-    @Test
-    public void adicionarPeriodoPadrao_deveLancarException_quandoDescricaoEstiverVazia() {
-        when(periodoRepository.existsByPadraoAndDescricaoIgnoreCase(any(), anyString())).thenReturn(false);
-
-        var request = umPeriodoRequest();
-        request.setDescricao(null);
-        assertThatExceptionOfType(ValidacaoException.class)
-            .isThrownBy(() -> periodoService.adicionarPeriodoPadrao(request))
-            .withMessage("É preciso ter uma descrição para o período.");
-    }
-
-    @Test
-    public void adicionarPeriodoPadrao_deveLancarException_quandoPeriodoJaExistirParaUsuario() {
-        when(periodoRepository.existsByPadraoAndDescricaoIgnoreCase(any(), anyString())).thenReturn(true);
-        when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(7);
-
-        var request = umPeriodoRequest();
-        assertThatExceptionOfType(ValidacaoException.class)
-            .isThrownBy(() -> periodoService.adicionarPeriodoPadrao(request))
-            .withMessage("O período Treino já existe.");
-    }
-
-    @Test
     public void adicionarPeriodoUsuario_deveSalvarPeriodoUsuario_quandoDadosEstiveremCorretos() {
         when(periodoRepository.existsByUsuarioIdAndDescricaoIgnoreCase(anyInt(), anyString())).thenReturn(false);
         when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(7);
@@ -77,7 +46,7 @@ public class PeriodoServiceTest {
 
     @Test
     public void adicionarPeriodoUsuario_deveLancarException_quandoDescricaoEstiverVazia() {
-        when(periodoRepository.existsByPadraoAndDescricaoIgnoreCase(any(), anyString())).thenReturn(false);
+        when(periodoRepository.existsByUsuarioIdAndDescricaoIgnoreCase(anyInt(), anyString())).thenReturn(false);
 
         var request = umPeriodoRequest();
         request.setDescricao(null);
@@ -110,16 +79,6 @@ public class PeriodoServiceTest {
         assertThat(response.getMessage()).isEqualTo("O período Pré-Treino foi removido com sucesso!");
 
         verify(periodoRepository, times(1)).deleteByIdAndUsuarioId(anyInt(), anyInt());
-    }
-
-    @Test
-    public void removerPeriodoUsuario_deveLancarException_quandoPeriodoForPadrao() {
-        when(periodoRepository.findById(anyInt())).thenReturn(Optional.of(umPeriodoPadrao()));
-        when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(7);
-
-        assertThatExceptionOfType(ValidacaoException.class)
-            .isThrownBy(() -> periodoService.removerPeriodoUsuario(1))
-            .withMessage("Não é possível remover um período padrão.");
     }
 
     @Test

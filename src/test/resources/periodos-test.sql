@@ -1,7 +1,7 @@
-INSERT INTO PERIODO (ID, DESCRICAO, PADRAO, FK_USUARIO) VALUES
-(1, 'Manhã', 'V', null),
-(2, 'Almoço', 'V', null),
-(3, 'Tarde', 'V', null),
-(4, 'Noite', 'V', null),
-(5, 'Pré-Treino', 'F', 7),
-(6, 'Pós-Treino', 'F', 7);
+INSERT INTO PERIODO (ID, DESCRICAO, FK_USUARIO) VALUES
+(10, 'Manhã', 7),
+(11, 'Almoço', 7),
+(12, 'Tarde', 7),
+(13, 'Noite', 7),
+(5, 'Pré-Treino', 7),
+(6, 'Pós-Treino', 7);

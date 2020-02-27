@@ -34,13 +34,14 @@ public class DietaService {
     @Autowired
     private AutenticacaoService autenticacaoService;
     @Autowired
-    private PeriodoService buscarPeriodos;
+    private PeriodoService periodoService;
 
     @Transactional
     public DietaCompletaResponse salvar(DietaRequest request) {
         var usuarioLogado = autenticacaoService.getUsuarioAutenticado();
         var dieta = Dieta.of(request, usuarioLogado.getId());
         dietaRepository.save(dieta);
+        periodoService.adicionarPeriodosPadroes();
         return buscarDietaAtualCompleta();
     }
 
@@ -98,7 +99,7 @@ public class DietaService {
         } else {
             var dietaAtual = dieta.get();
             return DietaCompletaResponse.of(dietaAtual, criarResponseDePeriodos(dietaAtual.getId(),
-                buscarPeriodos.buscarPeriodos()));
+                periodoService.buscarPeriodosDoUsuario()));
         }
     }
 
@@ -125,7 +126,7 @@ public class DietaService {
         } else {
             var dietaAtual = dieta.get();
             return DietaCompletaResponse.of(dietaAtual, criarResponseDePeriodos(dietaAtual.getId(),
-                buscarPeriodos.buscarPeriodos()));
+                periodoService.buscarPeriodosDoUsuario()));
         }
     }
 }
