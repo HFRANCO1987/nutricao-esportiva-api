@@ -37,6 +37,7 @@ public class UsuarioAnalisePesoResponse {
 
     private String mensagem;
     private Double pesoAtual;
+    private Double alturaAtual;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataPesoAtual;
     private Double pesoAnterior;
@@ -55,6 +56,7 @@ public class UsuarioAnalisePesoResponse {
                                                 List<AnalisePesoAlturaResponse> analisePesoAltura) {
         var response = new UsuarioAnalisePesoResponse();
         response.setPesoAtual(atual.getPeso());
+        response.setAlturaAtual(atual.getAltura());
         response.setDataPesoAtual(atual.getDataCadastro().toLocalDate());
         response.setPesoAnterior(anterior.getPeso());
         response.setDataPesoAnterior(anterior.getDataCadastro().toLocalDate());
