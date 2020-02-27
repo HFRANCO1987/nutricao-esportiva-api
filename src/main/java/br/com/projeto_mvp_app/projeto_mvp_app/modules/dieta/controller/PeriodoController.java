@@ -13,14 +13,9 @@ public class PeriodoController {
     @Autowired
     private PeriodoService periodoService;
 
-    @PostMapping("usuario")
+    @PostMapping
     public SuccessResponseDetails adicionarPeriodoUsuario(@RequestBody PeriodoRequest request) {
         return periodoService.adicionarPeriodoUsuario(request);
-    }
-
-    @PostMapping("padrao")
-    public SuccessResponseDetails adicionarPeriodoPadrao(@RequestBody PeriodoRequest request) {
-        return periodoService.adicionarPeriodoPadrao(request);
     }
 
     @DeleteMapping("remover/{id}")

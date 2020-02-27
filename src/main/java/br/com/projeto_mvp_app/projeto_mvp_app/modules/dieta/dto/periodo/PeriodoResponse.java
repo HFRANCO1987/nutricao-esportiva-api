@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,12 +16,14 @@ public class PeriodoResponse {
 
     private Integer id;
     private String descricao;
+    private LocalTime hora;
 
     public static PeriodoResponse of(Periodo periodo) {
         return PeriodoResponse
             .builder()
             .id(periodo.getId())
             .descricao(periodo.getDescricao())
+            .hora(periodo.getHora())
             .build();
     }
 }

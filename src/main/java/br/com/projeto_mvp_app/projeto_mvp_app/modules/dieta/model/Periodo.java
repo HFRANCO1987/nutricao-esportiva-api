@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
+import java.time.LocalTime;
 
 @Data
 @Entity
@@ -30,6 +31,9 @@ public class Periodo {
     @JsonIgnore
     @ManyToOne
     private Usuario usuario;
+
+    @Column(name = "HORA", nullable = false)
+    private LocalTime hora;
 
     public Periodo(Integer id) {
         this.id = id;

@@ -52,14 +52,6 @@ public class PeriodoService {
         }
     }
 
-    @Transactional
-    public SuccessResponseDetails adicionarPeriodoPadrao(PeriodoRequest request) {
-        validarDescricaoVazia(request);
-        var periodo = Periodo.of(request);
-        periodoRepository.save(periodo);
-        return new SuccessResponseDetails("O período " + periodo.getDescricao() + " foi adicionado com sucesso!");
-    }
-
     public void adicionarPeriodosPadroes() {
         periodoRepository.saveAll(montarPeriodosPadroes(autenticacaoService.getUsuarioAutenticadoId()));
     }
