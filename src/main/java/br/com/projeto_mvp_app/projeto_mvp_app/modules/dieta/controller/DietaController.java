@@ -39,7 +39,7 @@ public class DietaController {
     }
 
     @GetMapping
-    public Page buscarTodas(PageRequest pageable, DietaFiltros filtros) {
+    public Page<Dieta> buscarTodas(PageRequest pageable, DietaFiltros filtros) {
         return dietaService.buscarTodas(pageable, filtros);
     }
 

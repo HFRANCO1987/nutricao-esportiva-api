@@ -65,35 +65,35 @@ public class DietaService {
     }
 
     private void validarPermissaoDoUsuarioSobreDieta(Integer dietaId) {
-        var usuarioLogadoId = autenticacaoService.getUsuarioAutenticado().getId();
+        var usuarioLogadoId = autenticacaoService.getUsuarioAutenticadoId();
         if (!dietaRepository.existsByIdAndUsuarioId(dietaId, usuarioLogadoId)) {
             throw new ValidacaoException("Você não tem permissão para alterar essa dieta.");
         }
     }
 
     public DietaResponse buscarDietaComDadosCompletos(Integer id) {
-        var usuarioLogadoId = autenticacaoService.getUsuarioAutenticado().getId();
+        var usuarioLogadoId = autenticacaoService.getUsuarioAutenticadoId();
         var dieta = dietaRepository.findByIdAndUsuarioId(id, usuarioLogadoId)
             .orElseThrow(() -> DIETA_NAO_ENCONTRADA_EXCEPTION);
         var alimentosPeriodosDaDieta = periodoAlimentoDietaRepository.findByDietaId(dieta.getId());
         return DietaResponse.of(dieta, alimentosPeriodosDaDieta);
     }
 
-    public Page buscarTodas(PageRequest pageable, DietaFiltros filtros) {
-        filtros.setUsuarioId(autenticacaoService.getUsuarioAutenticado().getId());
+    public Page<Dieta> buscarTodas(PageRequest pageable, DietaFiltros filtros) {
+        filtros.setUsuarioId(autenticacaoService.getUsuarioAutenticadoId());
         return dietaRepository.findAll(filtros.toPredicate().build(), pageable);
     }
 
     public List<Dieta> buscarTodasSemPaginacao(DietaFiltros filtros) {
-        filtros.setUsuarioId(autenticacaoService.getUsuarioAutenticado().getId());
+        filtros.setUsuarioId(autenticacaoService.getUsuarioAutenticadoId());
         return StreamSupport
             .stream(dietaRepository.findAll(filtros.toPredicate().build()).spliterator(), false)
             .collect(Collectors.toList());
     }
 
     public DietaCompletaResponse buscarDietaCompleta(Integer id) {
-        var usuarioAutenticado = autenticacaoService.getUsuarioAutenticado();
-        var dieta = dietaRepository.findByIdAndUsuarioId(id, usuarioAutenticado.getId());
+        var usuarioAutenticadoId = autenticacaoService.getUsuarioAutenticadoId();
+        var dieta = dietaRepository.findByIdAndUsuarioId(id, usuarioAutenticadoId);
         if (dieta.isEmpty()) {
             return new DietaCompletaResponse();
         } else {
@@ -119,8 +119,8 @@ public class DietaService {
     }
 
     public DietaCompletaResponse buscarDietaAtualCompleta() {
-        var usuarioAutenticado = autenticacaoService.getUsuarioAutenticado();
-        var dieta = dietaRepository.findFirstByUsuarioIdOrderByDataCadastroDesc(usuarioAutenticado.getId());
+        var usuarioAutenticadoId = autenticacaoService.getUsuarioAutenticadoId();
+        var dieta = dietaRepository.findFirstByUsuarioIdOrderByDataCadastroDesc(usuarioAutenticadoId);
         if (dieta.isEmpty()) {
             return new DietaCompletaResponse();
         } else {
