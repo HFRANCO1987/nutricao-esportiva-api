@@ -15,6 +15,20 @@ public class AlimentoMocks {
             .id(1)
             .descricao("Arroz")
             .categoria(umaCategoriaAlimento())
+            .calcio_mg(15.5)
+            .carboidrato_g(165.0)
+            .cinzas_g(15.3)
+            .colesterol_mg(12.46)
+            .energia_kj(56.3)
+            .cobre_mg(13.2)
+            .energia_kcal(123.3)
+            .ferro_mg(12.2)
+            .fibra_alimentar_g(15.3)
+            .manganes_mg(12.46)
+            .fosforo_mg(56.3)
+            .potassio_mg(13.2)
+            .protei_g(123.3)
+            .riboflavi_mg(12.2)
             .build();
     }
 
@@ -35,6 +49,18 @@ public class AlimentoMocks {
             .builder()
             .calcio_mg(15.5)
             .carboidrato_g(165.0)
+            .cinzas_g(15.3)
+            .colesterol_mg(12.46)
+            .energia_kj(56.3)
+            .cobre_mg(13.2)
+            .energia_kcal(123.3)
+            .ferro_mg(12.2)
+            .fibra_alimentar_g(15.3)
+            .manganes_mg(12.46)
+            .fosforo_mg(56.3)
+            .potassio_mg(13.2)
+            .protei_g(123.3)
+            .riboflavi_mg(12.2)
             .build();
     }
 

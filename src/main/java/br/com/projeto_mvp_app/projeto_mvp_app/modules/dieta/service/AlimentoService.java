@@ -23,7 +23,7 @@ public class AlimentoService {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
-    public Page buscarTodos(PageRequest pageable, AlimentoFiltros filtros) {
+    public Page<AlimentoResponse> buscarTodos(PageRequest pageable, AlimentoFiltros filtros) {
         return alimentoRepository
             .findAll(filtros.toPredicate().build(), pageable)
             .map(alimento -> AlimentoResponse.of(null, alimento));

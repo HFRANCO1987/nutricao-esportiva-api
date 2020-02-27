@@ -22,7 +22,7 @@ public class AlimentoController {
     private AlimentoService alimentoService;
 
     @GetMapping
-    public Page buscarAlimentos(PageRequest pageable, AlimentoFiltros filtros) {
+    public Page<AlimentoResponse> buscarAlimentos(PageRequest pageable, AlimentoFiltros filtros) {
         return alimentoService.buscarTodos(pageable, filtros);
     }
 

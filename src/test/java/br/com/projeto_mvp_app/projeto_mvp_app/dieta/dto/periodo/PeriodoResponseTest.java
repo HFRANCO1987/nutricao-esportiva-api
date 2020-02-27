@@ -1,4 +1,4 @@
-package br.com.projeto_mvp_app.projeto_mvp_app.dieta.dto;
+package br.com.projeto_mvp_app.projeto_mvp_app.dieta.dto.periodo;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.periodo.PeriodoResponse;
 import org.junit.Test;
