@@ -9,11 +9,10 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.esporte.repository.Usuario
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.AutenticacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 public class EsporteService {
@@ -37,25 +36,19 @@ public class EsporteService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public SuccessResponseDetails adicionarEsporteUsuario(Integer esporteId) {
-        validarDadosVazios(esporteId);
         var usuarioLogadoId = autenticacaoService.getUsuarioAutenticadoId();
         validarUsuarioComEsporte(esporteId, usuarioLogadoId);
         usuarioEsporteRepository.save(UsuarioEsporte.of(usuarioLogadoId, esporteId));
         return new SuccessResponseDetails("O esporte foi vinculado ao usuário com sucesso!");
     }
 
+    @Transactional
     public SuccessResponseDetails removerEsporteUsuario(Integer esporteId) {
-        validarDadosVazios(esporteId);
         var usuarioLogadoId = autenticacaoService.getUsuarioAutenticadoId();
         usuarioEsporteRepository.deleteByUsuarioIdAndEsporteId(usuarioLogadoId, esporteId);
-        return new SuccessResponseDetails("O esporte foi vinculado ao usuário com sucesso!");
-    }
-
-    private void validarDadosVazios(Integer esporteId) {
-        if (isEmpty(esporteId)) {
-            throw new ValidacaoException("É necessário informar um esporte.");
-        }
+        return new SuccessResponseDetails("O esporte foi removido do usuário com sucesso!");
     }
 
     private void validarUsuarioComEsporte(Integer esporteId, Integer usuarioId) {
@@ -65,9 +58,7 @@ public class EsporteService {
     }
 
     public Esporte buscarEsportePorId(Integer id) {
-        var usuarioLogadoId = autenticacaoService.getUsuarioAutenticadoId();
-        return usuarioEsporteRepository.findByUsuarioIdAndEsporteId(usuarioLogadoId, id)
-            .orElseThrow(() -> new ValidacaoException("O esporte não existe para esse usuário."))
-            .getEsporte();
+        return esporteRepository.findById(id)
+            .orElseThrow(() -> new ValidacaoException("O esporte não existe para esse usuário."));
     }
 }

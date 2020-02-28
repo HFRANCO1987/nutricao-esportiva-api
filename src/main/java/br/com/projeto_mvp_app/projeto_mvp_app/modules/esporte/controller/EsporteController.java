@@ -35,7 +35,7 @@ public class EsporteController {
         return esporteService.adicionarEsporteUsuario(esporteId);
     }
 
-    @PutMapping("{esporteId}/usuario/remover")
+    @DeleteMapping("{esporteId}/usuario/remover")
     public SuccessResponseDetails removereEsporteUsuario(@PathVariable Integer esporteId) {
         return esporteService.removerEsporteUsuario(esporteId);
     }

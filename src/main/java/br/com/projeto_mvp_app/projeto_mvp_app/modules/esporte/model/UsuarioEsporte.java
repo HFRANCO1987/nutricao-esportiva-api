@@ -1,6 +1,5 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.esporte.model;
 
-
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;

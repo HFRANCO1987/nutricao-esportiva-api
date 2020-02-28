@@ -34,9 +34,6 @@ public class Esporte {
     @Column(name = "KCAL_MIN_MAX", nullable = false)
     private Double kcalMinMax;
 
-    @Column(name = "UNIDADE", nullable = false)
-    private String unidade;
-
     public Esporte(Integer id) {
         this.id = id;
     }
