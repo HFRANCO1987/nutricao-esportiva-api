@@ -2,6 +2,7 @@ package br.com.projeto_mvp_app.projeto_mvp_app.dieta.service;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.config.exception.ValidacaoException;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Periodo;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.DietaRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.PeriodoAlimentoDietaRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.PeriodoRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.service.PeriodoService;
@@ -32,63 +33,68 @@ public class PeriodoServiceTest {
     private AutenticacaoService autenticacaoService;
     @Mock
     private PeriodoAlimentoDietaRepository periodoAlimentoDietaRepository;
+    @Mock
+    private DietaRepository dietaRepository;
 
     @Test
-    public void adicionarPeriodoUsuario_deveSalvarPeriodoUsuario_quandoDadosEstiveremCorretos() {
-        when(periodoRepository.existsByUsuarioIdAndDescricaoIgnoreCase(anyInt(), anyString())).thenReturn(false);
+    public void adicionarPeriodoDieta_deveSalvarPeriodoUsuario_quandoDadosEstiveremCorretos() {
+        when(periodoRepository.existsByDietaIdAndDescricaoIgnoreCase(anyInt(), anyString())).thenReturn(false);
         when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(7);
+        when(dietaRepository.existsByIdAndUsuarioId(anyInt(), anyInt())).thenReturn(true);
 
         var request = umPeriodoRequest();
-        periodoService.adicionarPeriodoUsuario(request);
+        periodoService.adicionarPeriodoDieta(request);
 
         verify(periodoRepository, times(1)).save(any(Periodo.class));
     }
 
     @Test
-    public void adicionarPeriodoUsuario_deveLancarException_quandoDescricaoEstiverVazia() {
-        when(periodoRepository.existsByUsuarioIdAndDescricaoIgnoreCase(anyInt(), anyString())).thenReturn(false);
+    public void adicionarPeriodoDieta_deveLancarException_quandoDescricaoEstiverVazia() {
+        when(periodoRepository.existsByDietaIdAndDescricaoIgnoreCase(anyInt(), anyString())).thenReturn(false);
 
         var request = umPeriodoRequest();
         request.setDescricao(null);
         assertThatExceptionOfType(ValidacaoException.class)
-            .isThrownBy(() -> periodoService.adicionarPeriodoUsuario(request))
+            .isThrownBy(() -> periodoService.adicionarPeriodoDieta(request))
             .withMessage("É preciso ter uma descrição para o período.");
     }
 
     @Test
-    public void adicionarPeriodoUsuario_deveLancarException_quandoPeriodoJaExistirParaUsuario() {
-        when(periodoRepository.existsByUsuarioIdAndDescricaoIgnoreCase(anyInt(), anyString())).thenReturn(true);
+    public void adicionarPeriodoDieta_deveLancarException_quandoPeriodoJaExistirParaUsuario() {
+        when(periodoRepository.existsByDietaIdAndDescricaoIgnoreCase(anyInt(), anyString())).thenReturn(true);
         when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(7);
+        when(dietaRepository.existsByIdAndUsuarioId(anyInt(), anyInt())).thenReturn(true);
 
         var request = umPeriodoRequest();
         assertThatExceptionOfType(ValidacaoException.class)
-            .isThrownBy(() -> periodoService.adicionarPeriodoUsuario(request))
-            .withMessage("O período Treino já está registrado para você.");
+            .isThrownBy(() -> periodoService.adicionarPeriodoDieta(request))
+            .withMessage("O período Treino já está registrado para essa dieta.");
     }
 
     @Test
-    public void removerPeriodoUsuario_deveRemoverPeriodoUsuario_quandoDadosEstiveremCorretos() {
+    public void removerPeriodoDieta_deveremoverPeriodoDieta_quandoDadosEstiveremCorretos() {
         when(periodoRepository.findById(anyInt())).thenReturn(Optional.of(umPeriodoUsuario()));
         when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(7);
         when(periodoAlimentoDietaRepository.existsByPeriodoId(anyInt())).thenReturn(false);
+        when(dietaRepository.existsByIdAndUsuarioId(anyInt(), anyInt())).thenReturn(true);
 
-        var response = periodoService.removerPeriodoUsuario(1);
+        var response = periodoService.removerPeriodoDieta(1);
 
         assertThat(response).isNotNull();
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getMessage()).isEqualTo("O período Pré-Treino foi removido com sucesso!");
 
-        verify(periodoRepository, times(1)).deleteByIdAndUsuarioId(anyInt(), anyInt());
+        verify(periodoRepository, times(1)).deleteById(anyInt());
     }
 
     @Test
-    public void removerPeriodoUsuario_deveLancarException_quandoPeriodoEstiverVinculadoParaUmaDieta() {
+    public void removerPeriodoDieta_deveLancarException_quandoPeriodoEstiverVinculadoParaUmaDieta() {
         when(periodoRepository.findById(anyInt())).thenReturn(Optional.of(umPeriodoUsuario()));
         when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(7);
         when(periodoAlimentoDietaRepository.existsByPeriodoId(anyInt())).thenReturn(true);
 
         assertThatExceptionOfType(ValidacaoException.class)
-            .isThrownBy(() -> periodoService.removerPeriodoUsuario(1))
+            .isThrownBy(() -> periodoService.removerPeriodoDieta(1))
             .withMessage("Esse período já está vinculado a uma dieta.");
     }
 }

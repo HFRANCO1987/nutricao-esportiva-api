@@ -4,7 +4,7 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.periodo.PeriodoR
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.periodo.PeriodoResponse;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Periodo;
 
-import static br.com.projeto_mvp_app.projeto_mvp_app.usuario.mocks.UsuarioMocks.umUsuario;
+import static br.com.projeto_mvp_app.projeto_mvp_app.dieta.mocks.DietaMocks.umaDieta;
 
 public class PeriodoMocks {
 
@@ -13,7 +13,7 @@ public class PeriodoMocks {
             .builder()
             .id(5)
             .descricao("Pré-Treino")
-            .usuario(umUsuario())
+            .dieta(umaDieta())
             .build();
     }
 
@@ -21,6 +21,7 @@ public class PeriodoMocks {
         return PeriodoRequest
             .builder()
             .id(5)
+            .dietaId(1)
             .descricao("Treino")
             .build();
     }

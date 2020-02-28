@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @Import(PeriodoService.class)
-@Sql(scripts = {"classpath:/usuarios-test.sql", "classpath:/periodos-test.sql"})
+@Sql(scripts = {"classpath:/usuarios-test.sql", "classpath:/alimentos-test.sql", "classpath:/dietas-test.sql"})
 @DataJpaTest
 public class PeriodoServiceIntegrationTest {
 
@@ -31,16 +31,14 @@ public class PeriodoServiceIntegrationTest {
     @Test
     public void buscarPeriodosDoUsuario_deveRetornarApenasPeriodosDoUsuario_quandoFlagForFalsaPorIdUsuario() {
         when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(7);
-        assertThat(periodoService.buscarPeriodosDoUsuario())
-            .hasSize(6)
+        assertThat(periodoService.buscarPeriodosDaDieta(116))
+            .hasSize(4)
             .extracting("id", "descricao")
             .containsExactlyInAnyOrder(
                 tuple(10, "Manhã"),
                 tuple(11, "Almoço"),
                 tuple(12, "Tarde"),
-                tuple(13, "Noite"),
-                tuple(5, "Pré-Treino"),
-                tuple(6, "Pós-Treino")
+                tuple(13, "Noite")
             );
     }
 
@@ -48,16 +46,14 @@ public class PeriodoServiceIntegrationTest {
     public void adicionarPeriodosPadroes_deveVincular4PeriodosPadroes_quandoDadosEstiveremCorretos() {
         when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(3);
 
-        periodoService.adicionarPeriodosPadroes();
-
-        assertThat(periodoService.buscarPeriodosDoUsuario())
+        assertThat(periodoService.buscarPeriodosDaDieta(116))
             .hasSize(4)
             .extracting("id", "descricao")
             .containsExactlyInAnyOrder(
-                tuple(1, "Manhã"),
-                tuple(2, "Almoço"),
-                tuple(3, "Tarde"),
-                tuple(4, "Noite")
+                tuple(10, "Manhã"),
+                tuple(11, "Almoço"),
+                tuple(12, "Tarde"),
+                tuple(13, "Noite")
             );
     }
 }

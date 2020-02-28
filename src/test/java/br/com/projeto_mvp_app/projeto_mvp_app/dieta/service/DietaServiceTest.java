@@ -40,17 +40,34 @@ public class DietaServiceTest {
     private PeriodoAlimentoDietaRepository periodoAlimentoDietaRepository;
 
     @Test
-    public void salvar_deveSalvarNovaDieta_quandoDadosEstiveremCoretos() {
+    public void salvar_deveSalvarNovaDietaEMandarParaServiceDePeriodos_quandoDadosEstiveremCoretosEForNovaDieta() {
         when(autenticacaoService.getUsuarioAutenticado()).thenReturn(umUsuarioAutenticado());
         when(dietaRepository.findFirstByUsuarioIdOrderByDataCadastroDesc(anyInt())).thenReturn(Optional.of(umaDieta()));
-        when(periodoService.buscarPeriodosDoUsuario()).thenReturn(List.of((umPeriodoResponse())));
+        when(periodoService.buscarPeriodosDaDieta(anyInt())).thenReturn(List.of((umPeriodoResponse())));
+        when(periodoAlimentoDietaRepository.findByDietaIdAndPeriodoId(anyInt(), anyInt()))
+            .thenReturn(List.of(umPeriodoAlimentoDieta()));
+        when(dietaRepository.save(any(Dieta.class))).thenReturn(umaDieta());
+
+        var request = umaDietaRequest();
+        request.setId(null);
+        dietaService.salvar(request);
+
+        verify(dietaRepository, times(1)).save(any(Dieta.class));
+        verify(periodoService, times(1)).adicionarPeriodosPadroes(anyInt());
+    }
+
+    @Test
+    public void salvar_deveSalvarNovaDietaENaoMandarParaServiceDePeriodos_quandoDadosEstiveremCoretosSendoEdicao() {
+        when(autenticacaoService.getUsuarioAutenticado()).thenReturn(umUsuarioAutenticado());
+        when(dietaRepository.findFirstByUsuarioIdOrderByDataCadastroDesc(anyInt())).thenReturn(Optional.of(umaDieta()));
+        when(periodoService.buscarPeriodosDaDieta(anyInt())).thenReturn(List.of((umPeriodoResponse())));
         when(periodoAlimentoDietaRepository.findByDietaIdAndPeriodoId(anyInt(), anyInt()))
             .thenReturn(List.of(umPeriodoAlimentoDieta()));
 
         dietaService.salvar(umaDietaRequest());
 
         verify(dietaRepository, times(1)).save(any(Dieta.class));
-        verify(periodoService, times(1)).adicionarPeriodosPadroes();
+        verify(periodoService, times(0)).adicionarPeriodosPadroes(anyInt());
     }
 
     @Test

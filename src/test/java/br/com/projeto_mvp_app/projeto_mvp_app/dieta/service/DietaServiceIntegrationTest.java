@@ -24,8 +24,7 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @Import({DietaService.class, PeriodoService.class})
-@Sql(scripts = {"classpath:/usuarios-test.sql", "classpath:/periodos-test.sql", "classpath:/alimentos-test.sql",
-    "classpath:/dietas-test.sql"})
+@Sql(scripts = {"classpath:/usuarios-test.sql", "classpath:/alimentos-test.sql", "classpath:/dietas-test.sql"})
 @DataJpaTest
 public class DietaServiceIntegrationTest {
 
@@ -141,22 +140,15 @@ public class DietaServiceIntegrationTest {
         assertThat(response).isNotNull();
         assertThat(response.getId()).isEqualTo(116);
         assertThat(response.getDescricao()).isEqualTo("Atualizar dieta 2");
-        assertThat(response.getPeriodosAlimentos().size()).isEqualTo(6);
-        assertThat(response.getPeriodosAlimentos().get(0).getDescricao()).isEqualTo("Pré-Treino");
-        assertThat(response.getPeriodosAlimentos().get(0).getAlimentos().get(0).getDescricao())
-            .isEqualTo("Cereais, mistura para vitami, trigo, cevada e aveia");
-        assertThat(response.getPeriodosAlimentos().get(0).getAlimentos().get(0).getCategoria())
-            .isEqualTo("Cereais e derivados");
-        assertThat(response.getPeriodosAlimentos().get(1).getDescricao()).isEqualTo("Pós-Treino");
-        assertThat(response.getPeriodosAlimentos().get(1).getAlimentos().size()).isEqualTo(0);
-        assertThat(response.getPeriodosAlimentos().get(2).getDescricao()).isEqualTo("Manhã");
-        assertThat(response.getPeriodosAlimentos().get(2).getAlimentos().size()).isEqualTo(2);
-        assertThat(response.getPeriodosAlimentos().get(3).getDescricao()).isEqualTo("Almoço");
-        assertThat(response.getPeriodosAlimentos().get(3).getAlimentos().size()).isEqualTo(1);
-        assertThat(response.getPeriodosAlimentos().get(4).getDescricao()).isEqualTo("Tarde");
-        assertThat(response.getPeriodosAlimentos().get(4).getAlimentos().size()).isEqualTo(1);
-        assertThat(response.getPeriodosAlimentos().get(5).getDescricao()).isEqualTo("Noite");
-        assertThat(response.getPeriodosAlimentos().get(5).getAlimentos().size()).isEqualTo(0);
+        assertThat(response.getPeriodosAlimentos().size()).isEqualTo(4);
+        assertThat(response.getPeriodosAlimentos().get(0).getDescricao()).isEqualTo("Manhã");
+        assertThat(response.getPeriodosAlimentos().get(0).getAlimentos().size()).isEqualTo(2);
+        assertThat(response.getPeriodosAlimentos().get(1).getDescricao()).isEqualTo("Almoço");
+        assertThat(response.getPeriodosAlimentos().get(1).getAlimentos().size()).isEqualTo(1);
+        assertThat(response.getPeriodosAlimentos().get(2).getDescricao()).isEqualTo("Tarde");
+        assertThat(response.getPeriodosAlimentos().get(2).getAlimentos().size()).isEqualTo(1);
+        assertThat(response.getPeriodosAlimentos().get(3).getDescricao()).isEqualTo("Noite");
+        assertThat(response.getPeriodosAlimentos().get(3).getAlimentos().size()).isEqualTo(0);
     }
 
     @Test
@@ -168,7 +160,7 @@ public class DietaServiceIntegrationTest {
         assertThat(response).isNotNull();
         assertThat(response.getId()).isEqualTo(169);
         assertThat(response.getDescricao()).isEqualTo("Nova Dieta Completa Response");
-        assertThat(response.getPeriodosAlimentos().size()).isEqualTo(6);
+        assertThat(response.getPeriodosAlimentos().size()).isEqualTo(2);
         assertThat(response.getPeriodosAlimentos().get(0).getDescricao()).isEqualTo("Pré-Treino");
         assertThat(response.getPeriodosAlimentos().get(0).getAlimentos().get(0).getDescricao())
             .isEqualTo("Cereais, mistura para vitami, trigo, cevada e aveia");

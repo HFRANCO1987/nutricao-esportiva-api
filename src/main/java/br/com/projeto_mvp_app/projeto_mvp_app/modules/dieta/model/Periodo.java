@@ -1,7 +1,6 @@
 package br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model;
 
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.periodo.PeriodoRequest;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,13 +26,13 @@ public class Periodo {
     @Column(name = "DESCRICAO", nullable = false)
     private String descricao;
 
-    @JoinColumn(name = "FK_USUARIO")
-    @JsonIgnore
-    @ManyToOne
-    private Usuario usuario;
-
     @Column(name = "HORA", nullable = false)
     private LocalTime hora;
+
+    @JoinColumn(name = "FK_DIETA")
+    @JsonIgnore
+    @ManyToOne
+    private Dieta dieta;
 
     public Periodo(Integer id) {
         this.id = id;
@@ -42,6 +41,7 @@ public class Periodo {
     public static Periodo of(PeriodoRequest request) {
         var periodo = new Periodo();
         BeanUtils.copyProperties(request, periodo);
+        periodo.setDieta(new Dieta(request.getDietaId()));
         return periodo;
     }
 }

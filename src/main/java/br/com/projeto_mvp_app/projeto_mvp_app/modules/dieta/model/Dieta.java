@@ -43,6 +43,11 @@ public class Dieta {
         dataCadastro = LocalDateTime.now();
     }
 
+    @JsonIgnore
+    public boolean isNovaDieta() {
+        return isEmpty(id);
+    }
+
     public Dieta(Integer id) {
         this.id = id;
     }

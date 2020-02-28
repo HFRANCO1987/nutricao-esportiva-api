@@ -7,9 +7,7 @@ import java.util.List;
 
 public interface PeriodoRepository extends JpaRepository<Periodo, Integer> {
 
-    List<Periodo> findAllByUsuarioId(Integer usuarioId);
+    List<Periodo> findAllByDietaId(Integer dietaId);
 
-    Boolean existsByUsuarioIdAndDescricaoIgnoreCase(Integer usuarioId, String descricao);
-
-    void deleteByIdAndUsuarioId(Integer id, Integer usuarioId);
+    Boolean existsByDietaIdAndDescricaoIgnoreCase(Integer usuarioId, String descricao);
 }

@@ -14,6 +14,7 @@ import java.time.LocalTime;
 public class PeriodoRequest {
 
     private Integer id;
+    private Integer dietaId;
     private String descricao;
     private LocalTime hora;
 }

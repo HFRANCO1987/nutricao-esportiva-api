@@ -40,8 +40,11 @@ public class DietaService {
     public DietaCompletaResponse salvar(DietaRequest request) {
         var usuarioLogado = autenticacaoService.getUsuarioAutenticado();
         var dieta = Dieta.of(request, usuarioLogado.getId());
-        dietaRepository.save(dieta);
-        periodoService.adicionarPeriodosPadroes();
+        var novaDieta = dieta.isNovaDieta();
+        var dietaSalva = dietaRepository.save(dieta);
+        if (novaDieta) {
+            periodoService.adicionarPeriodosPadroes(dietaSalva.getId());
+        }
         return buscarDietaAtualCompleta();
     }
 
@@ -99,7 +102,7 @@ public class DietaService {
         } else {
             var dietaAtual = dieta.get();
             return DietaCompletaResponse.of(dietaAtual, criarResponseDePeriodos(dietaAtual.getId(),
-                periodoService.buscarPeriodosDoUsuario()));
+                periodoService.buscarPeriodosDaDieta(dietaAtual.getId())));
         }
     }
 
@@ -126,7 +129,7 @@ public class DietaService {
         } else {
             var dietaAtual = dieta.get();
             return DietaCompletaResponse.of(dietaAtual, criarResponseDePeriodos(dietaAtual.getId(),
-                periodoService.buscarPeriodosDoUsuario()));
+                periodoService.buscarPeriodosDaDieta(dietaAtual.getId())));
         }
     }
 }

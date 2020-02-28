@@ -14,12 +14,12 @@ public class PeriodoController {
     private PeriodoService periodoService;
 
     @PostMapping
-    public SuccessResponseDetails adicionarPeriodoUsuario(@RequestBody PeriodoRequest request) {
-        return periodoService.adicionarPeriodoUsuario(request);
+    public SuccessResponseDetails adicionarPeriodoDieta(@RequestBody PeriodoRequest request) {
+        return periodoService.adicionarPeriodoDieta(request);
     }
 
     @DeleteMapping("remover/{id}")
-    public SuccessResponseDetails removerPeriodoUsuario(@PathVariable Integer id) {
-        return periodoService.removerPeriodoUsuario(id);
+    public SuccessResponseDetails removerPeriodoDieta(@PathVariable Integer id) {
+        return periodoService.removerPeriodoDieta(id);
     }
 }

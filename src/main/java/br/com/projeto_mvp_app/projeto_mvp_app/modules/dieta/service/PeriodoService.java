@@ -5,10 +5,11 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.response.SuccessResp
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.periodo.PeriodoRequest;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.periodo.PeriodoResponse;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.enums.EPeriodo;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Dieta;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Periodo;
+import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.DietaRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.PeriodoAlimentoDietaRepository;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.repository.PeriodoRepository;
-import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.model.Usuario;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.service.AutenticacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,13 +29,17 @@ public class PeriodoService {
     private AutenticacaoService autenticacaoService;
     @Autowired
     private PeriodoAlimentoDietaRepository periodoAlimentoDietaRepository;
+    @Autowired
+    private DietaRepository dietaRepository;
 
     @Transactional
-    public SuccessResponseDetails adicionarPeriodoUsuario(PeriodoRequest request) {
+    public SuccessResponseDetails adicionarPeriodoDieta(PeriodoRequest request) {
         validarDescricaoVazia(request);
+        validarDietaVazia(request);
+        var usuarioLogadoId = autenticacaoService.getUsuarioAutenticadoId();
+        validarDietaNaoExistente(request.getDietaId(), usuarioLogadoId);
         var periodo = Periodo.of(request);
-        periodo.setUsuario(new Usuario(autenticacaoService.getUsuarioAutenticadoId()));
-        validarPeriodoJaAdicionadoParaUsuario(periodo);
+        validarPeriodoJaAdicionadoParaDieta(periodo);
         periodoRepository.save(periodo);
         return new SuccessResponseDetails("O período " + periodo.getDescricao() + " foi adicionado com sucesso!");
     }
@@ -45,41 +50,53 @@ public class PeriodoService {
         }
     }
 
-    private void validarPeriodoJaAdicionadoParaUsuario(Periodo periodo) {
-        if (periodoRepository.existsByUsuarioIdAndDescricaoIgnoreCase(
-            periodo.getUsuario().getId(), periodo.getDescricao())) {
-            throw new ValidacaoException("O período " + periodo.getDescricao() + " já está registrado para você.");
+    private void validarDietaVazia(PeriodoRequest request) {
+        if (isEmpty(request.getDietaId())) {
+            throw new ValidacaoException("É preciso ter uma dieta vinculada ao período.");
         }
     }
 
-    public void adicionarPeriodosPadroes() {
-        periodoRepository.saveAll(montarPeriodosPadroes(autenticacaoService.getUsuarioAutenticadoId()));
+    private void validarDietaNaoExistente(Integer dietaId, Integer usuarioId) {
+        if (!dietaRepository.existsByIdAndUsuarioId(dietaId, usuarioId)) {
+            throw new ValidacaoException("A dieta informada não existe.");
+        }
     }
 
-    private List<Periodo> montarPeriodosPadroes(Integer usuarioLogadoId) {
+    private void validarPeriodoJaAdicionadoParaDieta(Periodo periodo) {
+        if (periodoRepository.existsByDietaIdAndDescricaoIgnoreCase(
+            periodo.getDieta().getId(), periodo.getDescricao())) {
+            throw new ValidacaoException("O período " + periodo.getDescricao() + " já está registrado para essa dieta.");
+        }
+    }
+
+    public void adicionarPeriodosPadroes(Integer dietaId) {
+        periodoRepository.saveAll(montarPeriodosPadroes(dietaId));
+    }
+
+    private List<Periodo> montarPeriodosPadroes(Integer dietaId) {
         return List.of(
-            criarPeriodo(EPeriodo.MANHA, usuarioLogadoId),
-            criarPeriodo(EPeriodo.ALMOCO, usuarioLogadoId),
-            criarPeriodo(EPeriodo.TARDE, usuarioLogadoId),
-            criarPeriodo(EPeriodo.NOITE, usuarioLogadoId)
+            criarPeriodo(dietaId, EPeriodo.MANHA),
+            criarPeriodo(dietaId, EPeriodo.ALMOCO),
+            criarPeriodo(dietaId, EPeriodo.TARDE),
+            criarPeriodo(dietaId, EPeriodo.NOITE)
         );
     }
 
-    private Periodo criarPeriodo(EPeriodo periodo, Integer usuarioId) {
+    private Periodo criarPeriodo(Integer dietaId, EPeriodo periodo) {
         return Periodo
             .builder()
             .descricao(periodo.getPeriodo())
-            .usuario(new Usuario(usuarioId))
+            .dieta(new Dieta(dietaId))
+            .hora(periodo.getHora())
             .build();
     }
 
     @Transactional
-    public SuccessResponseDetails removerPeriodoUsuario(Integer id) {
-        var usuarioLogadoId = autenticacaoService.getUsuarioAutenticadoId();
+    public SuccessResponseDetails removerPeriodoDieta(Integer id) {
         var periodo = periodoRepository.findById(id)
             .orElseThrow(() -> new ValidacaoException("O período não existe."));
         validarPeriodoExistenteParaDieta(periodo.getId());
-        periodoRepository.deleteByIdAndUsuarioId(periodo.getId(), usuarioLogadoId);
+        periodoRepository.deleteById(periodo.getId());
         return new SuccessResponseDetails("O período " + periodo.getDescricao() + " foi removido com sucesso!");
     }
 
@@ -89,9 +106,9 @@ public class PeriodoService {
         }
     }
 
-    public List<PeriodoResponse> buscarPeriodosDoUsuario() {
+    public List<PeriodoResponse> buscarPeriodosDaDieta(Integer dietaId) {
         return periodoRepository
-            .findAllByUsuarioId(autenticacaoService.getUsuarioAutenticadoId())
+            .findAllByDietaId(dietaId)
             .stream()
             .map(PeriodoResponse::of)
             .collect(Collectors.toList());
