@@ -4,8 +4,8 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.usuario.dto.CaloriaRespons
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.utils.NumberUtils.getUmaCasa;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CaloriaResponseTest {
@@ -14,23 +14,23 @@ public class CaloriaResponseTest {
     public void of_deveConverterDadosCalorias_quandoDadosEstiveremCorretos() {
         var response = CaloriaResponse.of(90.5);
         assertThat(response).isNotNull();
-        assertThat(response.getEmagrecerMinimo().setScale(1, RoundingMode.HALF_UP))
-            .isEqualTo(BigDecimal.valueOf(1810.0).setScale(1, RoundingMode.HALF_UP));
-        assertThat(response.getEmagrecerMaximo().setScale(1, RoundingMode.HALF_UP))
-            .isEqualTo(BigDecimal.valueOf(2253.5).setScale(1, RoundingMode.HALF_UP));
-        assertThat(response.getEmagrecerMedia().setScale(1, RoundingMode.HALF_UP))
-            .isEqualTo(BigDecimal.valueOf(2031.7).setScale(1, RoundingMode.HALF_UP));
-        assertThat(response.getManterMinimo().setScale(1, RoundingMode.HALF_UP))
-            .isEqualTo(BigDecimal.valueOf(2262.5).setScale(1, RoundingMode.HALF_UP));
-        assertThat(response.getManterMaximo().setScale(1, RoundingMode.HALF_UP))
-            .isEqualTo(BigDecimal.valueOf(2706.0).setScale(1, RoundingMode.HALF_UP));
-        assertThat(response.getManterMedia().setScale(1, RoundingMode.HALF_UP))
-            .isEqualTo(BigDecimal.valueOf(2484.2).setScale(1, RoundingMode.HALF_UP));
-        assertThat(response.getEngordarMinimo().setScale(1, RoundingMode.HALF_UP))
-            .isEqualTo(BigDecimal.valueOf(2715.0).setScale(1, RoundingMode.HALF_UP));
-        assertThat(response.getEngordarMaximo().setScale(1, RoundingMode.HALF_UP))
-            .isEqualTo(BigDecimal.valueOf(3167.5).setScale(1, RoundingMode.HALF_UP));
-        assertThat(response.getEngordarMedia().setScale(1, RoundingMode.HALF_UP))
-            .isEqualTo(BigDecimal.valueOf(2941.3).setScale(1, RoundingMode.HALF_UP));
+        assertThat(getUmaCasa(response.getEmagrecerMinimo()))
+            .isEqualTo(getUmaCasa(1810.0));
+        assertThat(getUmaCasa(response.getEmagrecerMaximo()))
+            .isEqualTo(getUmaCasa(2253.5));
+        assertThat(getUmaCasa(response.getEmagrecerMedia()))
+            .isEqualTo(getUmaCasa(2936.7));
+        assertThat(getUmaCasa(response.getManterMinimo()))
+            .isEqualTo(BigDecimal.valueOf(2262.5));
+        assertThat(getUmaCasa(response.getManterMaximo()))
+            .isEqualTo(getUmaCasa(2706.0));
+        assertThat(getUmaCasa(response.getManterMedia()))
+            .isEqualTo(getUmaCasa(3615.5));
+        assertThat(getUmaCasa(response.getEngordarMinimo()))
+            .isEqualTo(getUmaCasa(2715.0));
+        assertThat(getUmaCasa(response.getEngordarMaximo()))
+            .isEqualTo(getUmaCasa(3167.5));
+        assertThat(getUmaCasa(response.getEngordarMedia()))
+            .isEqualTo(getUmaCasa(2941.3));
     }
 }
