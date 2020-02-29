@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.utils.NumberUtils.getDuasCasas;
 
 @Data
 @Builder
@@ -15,7 +16,6 @@ import java.math.RoundingMode;
 @SuppressWarnings("MethodLength")
 public class CaloriaResponse {
 
-    private static final Integer NUMERO_CASAS_DECIMAIS = 2;
     private static final Double EMAGRECER_MINIMO = 20.0;
     private static final Double EMAGRECER_MAXIMO = 24.9;
     private static final Double MANTER_MINIMO = 25.0;
@@ -37,29 +37,20 @@ public class CaloriaResponse {
     public static CaloriaResponse of(Double peso) {
         var response = new CaloriaResponse();
         // Emagrecer
-        response.setEmagrecerMinimo(BigDecimal.valueOf(peso * EMAGRECER_MINIMO)
-            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP));
-        response.setEmagrecerMaximo(BigDecimal.valueOf(peso * EMAGRECER_MAXIMO)
-            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP));
-        response.setEmagrecerMedia(BigDecimal.valueOf((response.getEmagrecerMinimo().doubleValue()
-            + response.getEmagrecerMaximo().doubleValue()) / MEDIA)
-            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP));
+        response.setEmagrecerMinimo(getDuasCasas(peso * EMAGRECER_MINIMO));
+        response.setEmagrecerMaximo(getDuasCasas(peso * EMAGRECER_MAXIMO));
+        response.setEmagrecerMedia(getDuasCasas(response.getEmagrecerMinimo().doubleValue()
+            + response.getEmagrecerMaximo().doubleValue() / MEDIA));
         // Manter
-        response.setManterMinimo(BigDecimal.valueOf(peso * MANTER_MINIMO)
-            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP));
-        response.setManterMaximo(BigDecimal.valueOf(peso * MANTER_MAXIMO)
-            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP));
-        response.setManterMedia(BigDecimal.valueOf((response.getManterMinimo().doubleValue()
-            + response.getManterMaximo().doubleValue()) / MEDIA)
-            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP));
+        response.setManterMinimo(getDuasCasas(peso * MANTER_MINIMO));
+        response.setManterMaximo(getDuasCasas(peso * MANTER_MAXIMO));
+        response.setManterMedia(getDuasCasas(response.getManterMinimo().doubleValue()
+            + response.getManterMaximo().doubleValue() / MEDIA));
         // Engordar
-        response.setEngordarMinimo(BigDecimal.valueOf(peso * ENGORDAR_MINIMO)
-            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP));
-        response.setEngordarMaximo(BigDecimal.valueOf(peso * ENGORDAR_MAXIMO)
-            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP));
-        response.setEngordarMedia(BigDecimal.valueOf((response.getEngordarMinimo().doubleValue()
-            + response.getEngordarMaximo().doubleValue()) / MEDIA)
-            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP));
+        response.setEngordarMinimo(getDuasCasas(peso * ENGORDAR_MINIMO));
+        response.setEngordarMaximo(getDuasCasas(peso * ENGORDAR_MAXIMO));
+        response.setEngordarMedia(getDuasCasas((response.getEngordarMinimo().doubleValue()
+            + response.getEngordarMaximo().doubleValue()) / MEDIA));
         return response;
     }
 }

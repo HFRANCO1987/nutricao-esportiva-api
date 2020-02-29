@@ -7,15 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.utils.NumberUtils.getDuasCasas;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PeriodoAlimentoResponseList {
-
-    private static final Integer NUMERO_CASAS_DECIMAIS = 2;
 
     private String alimento;
     private String categoria;
@@ -28,8 +27,7 @@ public class PeriodoAlimentoResponseList {
             .alimento(periodoAlimentoDieta.getAlimento().getDescricao())
             .categoria(periodoAlimentoDieta.getAlimento().getCategoria().getDescricao())
             .periodo(periodoAlimentoDieta.getPeriodo().getDescricao())
-            .quantidade(BigDecimal.valueOf(periodoAlimentoDieta.getQuantidade())
-                .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP))
+            .quantidade(getDuasCasas(periodoAlimentoDieta.getQuantidade()))
             .build();
     }
 }

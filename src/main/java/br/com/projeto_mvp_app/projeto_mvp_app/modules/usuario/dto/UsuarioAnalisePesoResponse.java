@@ -9,11 +9,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.utils.NumberUtils.getDuasCasas;
 import static java.math.BigInteger.ZERO;
 
 @Data
@@ -32,7 +32,6 @@ public class UsuarioAnalisePesoResponse {
     private static final String PERDEU = "perdeu";
     private static final String AUMENTOU = " aumentou";
     private static final String MANTEVE = " manteve";
-    private static final Integer NUMERO_CASAS_DECIMAIS = 2;
     private static final Double TRINTA_POR_CENTO = 1.30;
 
     private String mensagem;
@@ -66,10 +65,10 @@ public class UsuarioAnalisePesoResponse {
         response.setPercentualPeso(calcularPercentualPeso(atual.getPeso(), anterior.getPeso()));
         response.setMensagem(definirMensagem(usuario.getNome(), atual.getPeso(), anterior.getPeso(),
             response.getDiferencaPeriodo()));
-        response.setCaloriasPorDiaSemExercicio(calcularTaxaMetabolicaBasal(usuario, atual));
-        response.setCaloriasPorDiaComExercicio(BigDecimal.valueOf(
-            calcularTaxaMetabolicaBasal(usuario, atual).doubleValue() * TRINTA_POR_CENTO)
-            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP));
+        response.setCaloriasPorDiaSemExercicio(getDuasCasas(
+            calcularTaxaMetabolicaBasal(usuario, atual)));
+        response.setCaloriasPorDiaComExercicio(getDuasCasas(
+            calcularTaxaMetabolicaBasal(usuario, atual) * TRINTA_POR_CENTO));
         response.setResultadoCalorias(CaloriaResponse.of(atual.getPeso()));
         response.setAnalisePesoAltura(analisePesoAltura);
         return response;
@@ -104,17 +103,15 @@ public class UsuarioAnalisePesoResponse {
     }
 
     private static BigDecimal calcularDiferencaPeso(Double pesoAtual, Double pesoAnterior) {
-        return BigDecimal.valueOf(Math.abs(pesoAtual - pesoAnterior)).setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP);
+        return getDuasCasas(Math.abs(pesoAtual - pesoAnterior));
     }
 
     private static BigDecimal calcularPercentualPeso(Double pesoAtual, Double pesoAnterior) {
         if (pesoAtual < pesoAnterior) {
-            return BigDecimal.valueOf(Math.abs(100 - (pesoAtual / pesoAnterior) * 100))
-                .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP);
+            return getDuasCasas(Math.abs(100 - (pesoAtual / pesoAnterior) * 100));
         }
         if (pesoAtual > pesoAnterior) {
-            return BigDecimal.valueOf(Math.abs(100 - (pesoAnterior / pesoAtual) * 100))
-                .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP);
+            return getDuasCasas(Math.abs(100 - (pesoAnterior / pesoAtual) * 100));
         } else {
             return new BigDecimal(ZERO);
         }
@@ -136,13 +133,17 @@ public class UsuarioAnalisePesoResponse {
         return "Olá, " + nome + ", você manteve seu peso atual de " + pesoAtual + "kg";
     }
 
-    private static BigDecimal calcularTaxaMetabolicaBasal(Usuario usuario, PesoAltura pesoAltura) {
+    private static Double calcularTaxaMetabolicaBasal(Usuario usuario, PesoAltura pesoAltura) {
         if (usuario.isMasculino()) {
-            return BigDecimal.valueOf(66.5 + (5 * pesoAltura.getAltura()) + (13.8 * pesoAltura.getPeso())
-                - (6.8 * usuario.getIdade())).setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP);
+            return 66.5
+                + (5 * pesoAltura.getAltura())
+                + (13.8 * pesoAltura.getPeso())
+                - (6.8 * usuario.getIdade());
         } else {
-            return BigDecimal.valueOf(655.1 + (1.8 * pesoAltura.getAltura()) + (9.5 * pesoAltura.getPeso())
-                - (4.7 * usuario.getIdade())).setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP);
+            return 655.1
+                + (1.8 * pesoAltura.getAltura())
+                + (9.5 * pesoAltura.getPeso())
+                - (4.7 * usuario.getIdade());
         }
     }
 }

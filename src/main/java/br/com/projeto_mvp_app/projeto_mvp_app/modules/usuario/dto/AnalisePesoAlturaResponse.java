@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
+
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.utils.NumberUtils.getDuasCasas;
 
 @Data
 @Builder
@@ -22,7 +23,6 @@ public class AnalisePesoAlturaResponse {
 
     private static final Integer INDICE_PRIMEIRO_CARACTERE = 0;
     private static final Integer INDICE_SEGUNDO_CARACTERE = 1;
-    private static final Integer NUMERO_CASAS_DECIMAIS = 2;
 
     private String diaSemana;
     @JsonFormat(pattern = "dd/MM/yyyy")
@@ -35,8 +35,7 @@ public class AnalisePesoAlturaResponse {
         if (ultimo) {
             response.setRelacaoPeso(new BigDecimal(BigInteger.ZERO));
         } else {
-            response.setRelacaoPeso(BigDecimal.valueOf(atual.getPeso() - proximo.getPeso())
-                .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP));
+            response.setRelacaoPeso(getDuasCasas(atual.getPeso() - proximo.getPeso()));
         }
         response.setPeso(atual.getPeso());
         response.setData(atual.getDataCadastro().toLocalDate());

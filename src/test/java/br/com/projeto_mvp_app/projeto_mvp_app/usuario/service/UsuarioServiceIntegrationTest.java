@@ -18,9 +18,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.utils.NumberUtils.getUmaCasa;
 import static br.com.projeto_mvp_app.projeto_mvp_app.usuario.mocks.UsuarioMocks.getPage;
 import static br.com.projeto_mvp_app.projeto_mvp_app.usuario.mocks.UsuarioMocks.umUsuarioAutenticado;
 import static org.assertj.core.api.Assertions.tuple;
@@ -33,8 +33,6 @@ import static org.mockito.Mockito.when;
 @Sql(scripts = "classpath:/usuarios-test.sql")
 @DataJpaTest
 public class UsuarioServiceIntegrationTest {
-
-    private static final Integer NUMERO_CASAS_DECIMAIS = 1;
 
     @Autowired
     private UsuarioService usuarioService;
@@ -104,19 +102,19 @@ public class UsuarioServiceIntegrationTest {
         assertThat(response.getAnalisePesoAltura().size()).isEqualTo(4);
         assertThat(response.getAnalisePesoAltura().get(0).getDiaSemana()).isEqualTo("Quinta-feira");
         assertThat(response.getAnalisePesoAltura().get(0).getPeso()).isEqualTo(90.0);
-        assertThat(response.getAnalisePesoAltura().get(0).getRelacaoPeso()
-            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP)).isEqualTo(BigDecimal.valueOf(-4.0));
+        assertThat(getUmaCasa(response.getAnalisePesoAltura().get(0).getRelacaoPeso()))
+            .isEqualTo(BigDecimal.valueOf(-4.0));
         assertThat(response.getAnalisePesoAltura().get(1).getDiaSemana()).isEqualTo("Sábado");
         assertThat(response.getAnalisePesoAltura().get(1).getPeso()).isEqualTo(94.0);
-        assertThat(response.getAnalisePesoAltura().get(1).getRelacaoPeso()
-            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP)).isEqualTo(BigDecimal.valueOf(86.8));
+        assertThat(getUmaCasa(response.getAnalisePesoAltura().get(1).getRelacaoPeso()))
+            .isEqualTo(BigDecimal.valueOf(86.8));
         assertThat(response.getAnalisePesoAltura().get(2).getDiaSemana()).isEqualTo("Segunda-feira");
         assertThat(response.getAnalisePesoAltura().get(2).getPeso()).isEqualTo(7.2);
-        assertThat(response.getAnalisePesoAltura().get(2).getRelacaoPeso()
-            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP)).isEqualTo(BigDecimal.valueOf(0.0));
+        assertThat(getUmaCasa(response.getAnalisePesoAltura().get(2).getRelacaoPeso()))
+            .isEqualTo(BigDecimal.valueOf(0.0));
         assertThat(response.getAnalisePesoAltura().get(3).getDiaSemana()).isEqualTo("Segunda-feira");
         assertThat(response.getAnalisePesoAltura().get(3).getPeso()).isEqualTo(7.2);
-        assertThat(response.getAnalisePesoAltura().get(3).getRelacaoPeso()
-            .setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP)).isEqualTo(BigDecimal.valueOf(0.0));
+        assertThat(getUmaCasa(response.getAnalisePesoAltura().get(3).getRelacaoPeso()))
+            .isEqualTo(BigDecimal.valueOf(0.0));
     }
 }

@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
+import static br.com.projeto_mvp_app.projeto_mvp_app.modules.comum.utils.NumberUtils.getDuasCasas;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Data
@@ -16,8 +16,6 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlimentoResponse {
-
-    private static final Integer NUMERO_CASAS_DECIMAIS = 2;
 
     private Integer id;
     private String descricao;
@@ -35,7 +33,7 @@ public class AlimentoResponse {
             .imagem(alimento.getImagem())
             .informacoes(AlimentoInformacoes.of(alimento))
             .quantidade(!isEmpty(quantidade)
-                ? BigDecimal.valueOf(quantidade).setScale(NUMERO_CASAS_DECIMAIS, RoundingMode.HALF_UP)
+                ? getDuasCasas(quantidade)
                 : BigDecimal.ZERO)
             .build();
     }
