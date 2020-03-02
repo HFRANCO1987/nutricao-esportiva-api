@@ -22,7 +22,7 @@ public class PeriodoController {
     }
 
     @PostMapping
-    public SuccessResponseDetails adicionarPeriodoDieta(@RequestBody PeriodoRequest request) {
+    public PeriodoResponse adicionarPeriodoDieta(@RequestBody PeriodoRequest request) {
         return periodoService.adicionarPeriodoDieta(request);
     }
 

@@ -4,6 +4,8 @@ import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.periodo.PeriodoR
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.dto.periodo.PeriodoResponse;
 import br.com.projeto_mvp_app.projeto_mvp_app.modules.dieta.model.Periodo;
 
+import java.time.LocalTime;
+
 import static br.com.projeto_mvp_app.projeto_mvp_app.dieta.mocks.DietaMocks.umaDieta;
 
 public class PeriodoMocks {
@@ -14,6 +16,7 @@ public class PeriodoMocks {
             .id(5)
             .descricao("Pré-Treino")
             .dieta(umaDieta())
+            .hora(LocalTime.parse("20:00"))
             .build();
     }
 
@@ -23,6 +26,7 @@ public class PeriodoMocks {
             .id(5)
             .dietaId(1)
             .descricao("Treino")
+            .hora(LocalTime.parse("20:00"))
             .build();
     }
 
@@ -31,6 +35,7 @@ public class PeriodoMocks {
             .builder()
             .id(1)
             .descricao("Manhã")
+            .hora(LocalTime.parse("20:00"))
             .build();
     }
 }

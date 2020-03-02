@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.LocalTime;
 import java.util.Optional;
 
 import static br.com.projeto_mvp_app.projeto_mvp_app.dieta.mocks.PeriodoMocks.umPeriodoRequest;
@@ -41,9 +42,15 @@ public class PeriodoServiceTest {
         when(periodoRepository.existsByDietaIdAndDescricaoIgnoreCase(anyInt(), anyString())).thenReturn(false);
         when(autenticacaoService.getUsuarioAutenticadoId()).thenReturn(7);
         when(dietaRepository.existsByIdAndUsuarioId(anyInt(), anyInt())).thenReturn(true);
+        when(periodoRepository.save(any(Periodo.class))).thenReturn(umPeriodoUsuario());
 
         var request = umPeriodoRequest();
-        periodoService.adicionarPeriodoDieta(request);
+        var response = periodoService.adicionarPeriodoDieta(request);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getId()).isEqualTo(5);
+        assertThat(response.getDescricao()).isEqualTo("Pré-Treino");
+        assertThat(response.getHora()).isEqualTo(LocalTime.parse("20:00"));
 
         verify(periodoRepository, times(1)).save(any(Periodo.class));
     }

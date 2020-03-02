@@ -33,15 +33,14 @@ public class PeriodoService {
     private DietaRepository dietaRepository;
 
     @Transactional
-    public SuccessResponseDetails adicionarPeriodoDieta(PeriodoRequest request) {
+    public PeriodoResponse adicionarPeriodoDieta(PeriodoRequest request) {
         validarDescricaoVazia(request);
         validarDietaVazia(request);
         var usuarioLogadoId = autenticacaoService.getUsuarioAutenticadoId();
         validarDietaNaoExistente(request.getDietaId(), usuarioLogadoId);
         var periodo = Periodo.of(request);
         validarPeriodoJaAdicionadoParaDieta(periodo);
-        periodoRepository.save(periodo);
-        return new SuccessResponseDetails("O período " + periodo.getDescricao() + " foi adicionado com sucesso!");
+        return PeriodoResponse.of(periodoRepository.save(periodo));
     }
 
     private void validarDescricaoVazia(PeriodoRequest request) {
