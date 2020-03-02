@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PeriodoRepository extends JpaRepository<Periodo, Integer> {
 
-    List<Periodo> findAllByDietaId(Integer dietaId);
+    List<Periodo> findAllByDietaIdOrderByHora(Integer dietaId);
 
     Boolean existsByDietaIdAndDescricaoIgnoreCase(Integer usuarioId, String descricao);
 }

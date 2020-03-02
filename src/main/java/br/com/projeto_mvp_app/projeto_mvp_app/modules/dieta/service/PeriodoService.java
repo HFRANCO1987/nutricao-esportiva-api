@@ -108,7 +108,7 @@ public class PeriodoService {
 
     public List<PeriodoResponse> buscarPeriodosDaDieta(Integer dietaId) {
         return periodoRepository
-            .findAllByDietaId(dietaId)
+            .findAllByDietaIdOrderByHora(dietaId)
             .stream()
             .map(PeriodoResponse::of)
             .collect(Collectors.toList());
